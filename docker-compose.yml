@@ -14,7 +14,19 @@ services:
     command: flask run --reload --host=0.0.0.0
     networks:
       - backend
-
+  app-bloxs:
+    build:
+      context: ./app-bloxs/
+      dockerfile: Dockerfile
+    container_name: app-bloxs
+    volumes: ['./app-bloxs:/app']
+    expose:
+      - '3000'
+    ports:
+      - '3000:3000'
+    command: npm run dev
+    networks:
+      - backend
 networks:
   backend:
     external: true
