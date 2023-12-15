@@ -10,4 +10,4 @@ RUN pip3 install -r requirements.txt
 
 EXPOSE 5000
 
-CMD ["flask", "run", "--reload"]
+CMD ["flask", "run", "--reload", "--host=0.0.0.0"]
