@@ -1,32 +1,53 @@
 version: '3.3'
   
 services:
-  api:
-    build:
-      context: ./api/
-      dockerfile: Dockerfile
-    container_name: api
-    volumes: ['./api:/app']
-    expose:
-      - '5000'
-    ports:
-      - '5000:5000'
-    command: flask run --reload --host=0.0.0.0
-    networks:
-      - backend
-  app-bloxs:
-    build:
-      context: ./app-bloxs/
-      dockerfile: Dockerfile
-    container_name: app-bloxs
-    volumes: ['./app-bloxs:/app']
-    expose:
-      - '3000'
-    ports:
-      - '3000:3000'
-    command: npm run dev
-    networks:
-      - backend
+    db:
+        image: mysql:8.2.0
+        restart: always
+        environment:
+            MYSQL_DATABASE: 'db'
+            MYSQL_PASSWORD: 'password'
+            MYSQL_ROOT_PASSWORD: 'password'
+        ports:
+            - '3306:3306'
+        expose:
+            - '3306'
+        volumes:
+            - db-volume:/var/lib/mysql
+    api:
+        build:
+            context: ./api/
+            dockerfile: Dockerfile
+        restart: always
+        container_name: api 
+        volumes: ['./api:/app']
+        expose:
+            - '5000'
+        ports:
+            - '5000:5000'
+        command: flask run --reload --host=0.0.0.0
+        networks:
+            - backend
+        depends_on:
+            - db
+    
+    app-bloxs:
+        build:
+            context: ./app-bloxs/
+            dockerfile: Dockerfile
+        container_name: app-bloxs
+        volumes: ['./app-bloxs:/app']
+        expose:
+            - '3000'
+        ports:
+            - '3000:3000'
+        command: npm run dev
+        networks:
+            - backend
+
 networks:
-  backend:
-    external: true
+    backend:
+        external: true
+
+volumes:
+    db-volume: {}
