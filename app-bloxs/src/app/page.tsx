@@ -1,12 +1,6 @@
 import Image from 'next/image'
 import axios from 'axios'
 
-axios.get('http://api:5000/').then((response) => {
-  console.log(response)
-}).catch((error) => {
-  console.log(error)
-});
-
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
