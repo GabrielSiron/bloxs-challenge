@@ -3,7 +3,7 @@ from services import db
 from models.account import Account
 from models.account_type import AccountType
 from models.person import Person
-from validators.account import CreateAccountValidator, ChangePasswordValidator
+from validators.account import CreateAccountValidator, ChangePasswordValidator, LoginValidator
 
 account_routes = APIBlueprint('account', __name__)
 
@@ -28,7 +28,7 @@ def create_account(json_data):
     account.person_relation = person
     db.session.add(account)
     db.session.commit()
-    
+
     return {'message': 'Account created successfully'}
 
 @account_routes.put('/change_password')
@@ -44,3 +44,16 @@ def change_password(json_data):
         db.session.commit()
         return {'message': 'Sucessfully changed password'}
     abort(400, 'Unable to change password')
+
+@account_routes.post('/login')
+@account_routes.input(LoginValidator)
+def login(json_data):
+    account = Account.query \
+        .filter_by(email=json_data['email']) \
+        .filter_by(password=json_data['password']) \
+        .first()
+    
+    if account:
+        return {'message': 'Logged in'}
+    
+    abort(400, 'Unable to login')
