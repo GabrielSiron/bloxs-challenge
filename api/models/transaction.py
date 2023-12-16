@@ -3,7 +3,7 @@ from sqlalchemy.sql import func
 
 
 class Transaction(db.Model):
-    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
     created_at = db.Column(db.DateTime, server_default=func.now())
     updated_at = db.Column(db.DateTime, onupdate=func.now())
     value = db.Column(db.Numeric, nullable=False)
