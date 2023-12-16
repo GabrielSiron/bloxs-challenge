@@ -24,6 +24,13 @@ services:
         restart: always
         container_name: api 
         volumes: ['./api:/app', '/tmp/slack_bot/mysqld:/var/run/mysqld']
+        environment:
+            DB_HOST: localhost
+            DB_PORT: 3306
+            DB_NAME: db
+            DB_USER: root
+            DB_PASSWORD: password
+            DB_DRIVER: mysql
         expose:
             - '5000'
         ports:
