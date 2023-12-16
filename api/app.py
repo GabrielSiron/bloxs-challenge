@@ -3,6 +3,7 @@ from services import db
 from endpoints.account import account_routes
 from os import getenv
 from flask_migrate import Migrate
+from flask_cors import CORS
 import models
 import os
 
@@ -19,6 +20,8 @@ def create_app():
     db_name = os.environ['DB_NAME']
 
     app.config["SQLALCHEMY_DATABASE_URI"] = f"{driver}://{user}:{password}@{host}:{port}/{db_name}"
+
+    cors = CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
     with app.app_context():
         db.init_app(app)
