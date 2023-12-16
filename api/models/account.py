@@ -14,7 +14,7 @@ class Account(db.Model):
     person_id = db.Column(db.Integer, db.ForeignKey("person.id"), unique=True)
     person_relation = db.relationship("Person", backref="Account", foreign_keys=person_id, uselist=False)
 
-    account_type_id = db.Column(db.Integer, db.ForeignKey("account_type.id"), unique=True)
+    account_type_id = db.Column(db.Integer, db.ForeignKey("account_type.id"))
     account_type_relation = db.relationship("AccountType", backref="Account", foreign_keys=account_type_id, uselist=False)
 
     def __repr__(self):
