@@ -3,11 +3,12 @@ from sqlalchemy.sql import func
 
 
 class Account(db.Model):
-    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
     created_at = db.Column(db.DateTime, server_default=func.now())
     updated_at = db.Column(db.DateTime, onupdate=func.now())
-    balance = db.Column(db.Numeric, nullable=False)
-    daily_limit = db.Column(db.Numeric, nullable=False)
+    email = db.Column(db.String(50), nullable=False, unique=True)
+    password = db.Column(db.String(50), nullable=False)
+    amount = db.Column(db.Numeric, nullable=False, default=0.0)
     is_active = db.Column(db.Boolean, default=True, nullable=False)
     
     person_id = db.Column(db.Integer, db.ForeignKey("person.id"), unique=True)
