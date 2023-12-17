@@ -1,9 +1,9 @@
 from apiflask import APIBlueprint, abort
 from services import db
-from models.account import Account
-from models.account_type import AccountType
-from models.person import Person
-from validators.account import CreateAccountValidator, ChangePasswordValidator, LoginValidator
+from models import Account
+from models import AccountType
+from models import Person
+from validators import CreateAccountValidator, ChangePasswordValidator, LoginValidator
 
 account_routes = APIBlueprint('account', __name__)
 

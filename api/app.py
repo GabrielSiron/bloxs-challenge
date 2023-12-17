@@ -1,14 +1,16 @@
+import os
+from time import sleep
+
 from apiflask import APIFlask
-from services import db
-from endpoints.account import account_routes
-from endpoints.transaction import transaction_routes
-from os import getenv
 from flask_migrate import Migrate
 from flask_cors import CORS
 import sqlalchemy
+
+from endpoints import account_routes
+from endpoints import transaction_routes
+from services import db
 import models
-import os
-from time import sleep
+
 
 def create_app():
     app = APIFlask(__name__)
@@ -38,9 +40,9 @@ def create_app():
 
     @app.cli.command("populate-database")
     def populate_database():
-        from models.account_type import AccountType
-        from models.account import Account
-        from models.person import Person
+        from models import AccountType
+        from models import Account
+        from models import Person
 
         # Creating two account types. User will be seted to the first type.
         gold_account_type = AccountType()

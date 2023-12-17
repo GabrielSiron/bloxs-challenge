@@ -3,7 +3,7 @@ from sqlalchemy.sql import func
 from services import db
 from decimal import Decimal
 from models import Transaction, Account
-from validators.transaction import MakeTransfer, MakeWithdrawal, MakeDeposit
+from validators import MakeTransfer, MakeWithdrawal, MakeDeposit
 
 
 transaction_routes = APIBlueprint('transaction', __name__)
