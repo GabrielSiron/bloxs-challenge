@@ -7,8 +7,10 @@ class Transaction(db.Model):
     created_at = db.Column(db.DateTime, server_default=func.now())
     updated_at = db.Column(db.DateTime, onupdate=func.now())
     value = db.Column(db.Numeric, nullable=False)
-    account_id = db.Column(db.Integer, db.ForeignKey("account.id"), unique=True)
-    account_relation = db.relationship("Account", backref="Transaction", foreign_keys=account_id, uselist=False)
+    origin_account_id = db.Column(db.Integer, db.ForeignKey("account.id"))
+    origin_account_relation = db.relationship("Account", foreign_keys=origin_account_id, uselist=False)
+    destination_account_id = db.Column(db.Integer, db.ForeignKey("account.id"))
+    destination_account_relation = db.relationship("Account", foreign_keys=destination_account_id, uselist=False)
 
     def __repr__(self):
         return f'<Transaction {self.value}>'

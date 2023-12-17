@@ -1,9 +1,11 @@
 from apiflask import APIFlask
 from services import db
 from endpoints.account import account_routes
+from endpoints.transaction import transaction_routes
 from os import getenv
 from flask_migrate import Migrate
 from flask_cors import CORS
+import sqlalchemy
 import models
 import os
 from time import sleep
@@ -28,10 +30,11 @@ def create_app():
         db.init_app(app)
         migrate.init_app(app, db)
         # wait the db service is ready
-        sleep(10)
+        # sleep(10)
         db.create_all() 
 
     app.register_blueprint(account_routes)
+    app.register_blueprint(transaction_routes)
 
     @app.cli.command("populate-database")
     def populate_database():
@@ -52,20 +55,37 @@ def create_app():
         diamond_account_type.description = f'Contas Diamond possuem limite diário de R${diamond_limit}'
         diamond_account_type.daily_limit = diamond_limit
 
-        person = Person()
-        person.name = 'Gabriel'
-        person.birth_date = '2001-06-19'
-        person.document_number = '99999999999'
+        first_person = Person()
+        first_person.name = 'Gabriel'
+        first_person.birth_date = '2001-06-19'
+        first_person.document_number = '99999999999'
 
-        account = Account()
-        account.email = 'testing.bloxs@gmail.com'
-        account.password = 'password'
-        account.person_relation = person
-        account.account_type_relation = gold_account_type
+        first_account = Account()
+        first_account.email = 'testing.bloxs@gmail.com'
+        first_account.password = 'password'
+        first_account.amount = 10000.00
+        first_account.person_relation = first_person
+        first_account.account_type_relation = gold_account_type
+
+        second_person = Person()
+        second_person.name = 'Siron'
+        second_person.birth_date = '2001-06-19'
+        second_person.document_number = '88888888888'
+
+        second_account = Account()
+        second_account.email = 'testing.siron@gmail.com'
+        second_account.password = 'password'
+        second_account.amount = 10000.00
+        second_account.person_relation = second_person
+        second_account.account_type_relation = diamond_account_type
         
         db.session.add(diamond_account_type)
-        db.session.add(account)
-        db.session.commit()
+        db.session.add_all([first_account,second_account])
+        try:
+            db.session.commit()
+        except sqlalchemy.exc.IntegrityError:
+            print('Users already exists. Skipping seed...')
+        
     return app
 
 
