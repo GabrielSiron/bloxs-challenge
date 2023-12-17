@@ -1,6 +1,9 @@
 from services import db
 from sqlalchemy.sql import func
+from sqlalchemy import event
 
+from models.account_type import AccountType
+from models import Person
 
 class Account(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
@@ -19,3 +22,13 @@ class Account(db.Model):
 
     def __repr__(self):
         return f'<Account {self.id}>'
+
+    @classmethod
+    def __declare_last__(cls):
+        event.listen(cls, "before_insert", cls.lowercase)
+
+    @staticmethod
+    def lowercase(mapper, connection, target):
+        target.email = target.email.lower()
+
+    
