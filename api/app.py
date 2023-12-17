@@ -6,6 +6,7 @@ from flask_migrate import Migrate
 from flask_cors import CORS
 import models
 import os
+from time import sleep
 
 def create_app():
     app = APIFlask(__name__)
@@ -19,14 +20,16 @@ def create_app():
     port = os.environ['DB_PORT']
     db_name = os.environ['DB_NAME']
 
-    app.config["SQLALCHEMY_DATABASE_URI"] = f"{driver}://{user}:{password}@{host}:{port}/{db_name}"
+    app.config["SQLALCHEMY_DATABASE_URI"] = f'{driver}://{user}:{password}@{host}:{port}/{db_name}'
 
-    cors = CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
-
+    cors = CORS(app, resources={r'/*': {'origins': '*'}})
+    
     with app.app_context():
         db.init_app(app)
         migrate.init_app(app, db)
-        db.create_all()
+        # wait the db service is ready
+        sleep(10)
+        db.create_all() 
 
     app.register_blueprint(account_routes)
 

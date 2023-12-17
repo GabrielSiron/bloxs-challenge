@@ -7,8 +7,6 @@ services:
         container_name: db
         environment:
             MYSQL_DATABASE: 'db'
-            MYSQL_USER: 'root'
-            MYSQL_PASSWORD: 'password'
             MYSQL_ROOT_PASSWORD: password'
         ports:
             - '3306:3306'
@@ -17,6 +15,8 @@ services:
         volumes:
             - db-volume:/var/run/mysqld
             - /tmp/slack_bot/mysqld:/var/run/mysqld
+            - ./init.sql:/data/application/init.sql
+        command: --init-file /data/application/init.sql
     api:
         build:
             context: ./api/
@@ -29,7 +29,7 @@ services:
             DB_PORT: 3306
             DB_NAME: db
             DB_USER: root
-            DB_PASSWORD: password
+            DB_PASSWORD: ''
             DB_DRIVER: mysql
         expose:
             - '5000'
