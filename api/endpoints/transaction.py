@@ -86,7 +86,7 @@ def make_deposit(json_data):
     db.session.add_all([transaction, destination_account])
     db.session.commit()
     return {'message': 'deposit ended successfully'}
-
+    
 def create_transaction(json_data):
     transaction = Transaction()
     transaction.value = Decimal(json_data['value'])
