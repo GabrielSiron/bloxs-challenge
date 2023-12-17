@@ -3,7 +3,7 @@ from sqlalchemy.sql import func
 from services import db
 from decimal import Decimal
 from models import Transaction, Account
-from validators.transaction import MakeTransfer, MakeWithdrawal, MakeDeposit
+from validators import MakeTransfer, MakeWithdrawal, MakeDeposit
 
 
 transaction_routes = APIBlueprint('transaction', __name__)
@@ -86,7 +86,7 @@ def make_deposit(json_data):
     db.session.add_all([transaction, destination_account])
     db.session.commit()
     return {'message': 'deposit ended successfully'}
-
+    
 def create_transaction(json_data):
     transaction = Transaction()
     transaction.value = Decimal(json_data['value'])
