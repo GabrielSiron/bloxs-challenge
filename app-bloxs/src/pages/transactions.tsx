@@ -54,7 +54,7 @@ export default function Transactions() {
         <List sx={{ width: '90%'}}>
           {
             transactions.map((transaction: any) => (
-                <ListItem secondaryAction={<p>R$ {transaction.value}</p>}>
+                <ListItem  key={transaction.id} secondaryAction={<p>R$ {transaction.value}</p>}>
                   {
                       transaction.origin_account_id && transaction.destination_account_id? 
                       <>
