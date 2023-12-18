@@ -1,0 +1,41 @@
+.page {
+    display: flex;
+    align-items: baseline;
+    padding-top: 100px;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+.card {
+    width: 600px;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    grid-template-rows: 1fr 1fr;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--neutral-background-gray);
+    background-color: #e9e9e9;
+    border-radius: 15px;
+}
+
+.alert {
+    position: fixed;
+    justify-content: center;
+    top: 10px;
+    right: 10px;
+}
+
+.btnContainer {
+    width: 90%;
+    margin-bottom: 6px;
+}
+
+.leftButton {
+    float: left;
+}
+
+.rightButton {
+    float: right;
+}

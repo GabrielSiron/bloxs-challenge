@@ -1,9 +1,13 @@
 from apiflask import APIBlueprint, abort
+from flask import request
 from sqlalchemy.sql import func
+from sqlalchemy import or_
 from services import db
 from decimal import Decimal
 from models import Transaction, Account
 from validators import MakeTransfer, MakeWithdrawal, MakeDeposit
+import jwt
+import os
 
 
 transaction_routes = APIBlueprint('transaction', __name__)
@@ -89,6 +93,50 @@ def make_deposit(json_data):
     db.session.add_all([transaction, destination_account])
     db.session.commit()
     return {'message': 'deposit ended successfully'}
+
+@transaction_routes.get('/transactions')
+def get_transactions():
+    query = request.args
+    token = request.headers.get('authorization')
+    payload = jwt.decode(token, os.getenv('SECRET_KEY'), algorithms=['HS256'])
+    
+    total_transactions = Transaction.query.count()
+    transactions = Transaction.query \
+        .filter((Transaction.origin_account_id == payload['user_id']) | \
+                (Transaction.destination_account_id == payload['user_id']))
+                
+    page = transactions.paginate(
+            page=int(query.get('page', 1)),
+            per_page=int(query.get('per_page', 20))
+        )
+    
+    items = page.items
+    
+    response = {
+        'message': 'ok',
+        'has_prev': page.has_prev,
+        'next_num': page.next_num,
+        'prev_num': page.prev_num,
+        'has_next': page.has_next,
+        'transactions': []
+    }
+
+    for transaction in items:
+        destination_name = ''
+        if transaction.destination_account_relation:
+            destination_name = transaction.destination_account_relation.person_relation.name
+        response['transactions'].append(
+            {
+                'id': transaction.id,
+                'value': transaction.value,
+                'date': transaction.created_at,
+                'origin_account_id': transaction.origin_account_id,
+                'destination_account_name': destination_name,
+                'destination_account_id': transaction.destination_account_id,
+            }
+        )
+
+    return response
     
 def create_transaction(json_data):
     transaction = Transaction()
@@ -96,3 +144,4 @@ def create_transaction(json_data):
     transaction.destination_account_id = json_data.get('destination_account_id')
     transaction.origin_account_id = json_data.get('origin_account_id')
     return transaction
+
