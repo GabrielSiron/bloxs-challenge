@@ -12,11 +12,9 @@ export const basePostRequest = (endpoint: string, form: any) => {
     })
 }
 
-export const baseGetRequest = (endpoint: string, form: any = {}, query: string = '') => {
-    console.log(form);
-    
+export const baseGetRequest = (endpoint: string, query: string = '') => {  
     return new Promise((resolve, reject) => {
-        axios.get(`${process.env.BASE_URL}${endpoint}?${query}`,)
+        axios.get(`${process.env.BASE_URL}${endpoint}?${query}`)
             .then((data) => {
                 resolve(data)
             })
