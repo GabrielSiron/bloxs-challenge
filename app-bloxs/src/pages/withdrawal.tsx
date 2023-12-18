@@ -63,9 +63,9 @@ export default function Withdrawal() {
   }
 
   const WithdrawalMoney = () => {
-    makeWithdrawal(form)
+    makeWithdrawal({...form, value: form.value.replace(',', '.')})
       .then((data) => {
-        router.push('/home')
+        router.push('/transactions')
       })
       .catch((error) => {
         setOpen(true)
@@ -90,6 +90,7 @@ export default function Withdrawal() {
               label="Valor do Saque"
               variant="outlined"
               placeholder="0,00"
+              type="number"
               error={inputError}
               helperText={inputMessageError}
               InputProps={{
