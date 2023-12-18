@@ -1,5 +1,7 @@
 import axios from 'axios'
 
+if(typeof window !== 'undefined') axios.defaults.headers.common['authorization'] = `${localStorage.getItem('token')}`
+
 export const basePostRequest = (endpoint: string, form: any) => {
     return new Promise((resolve, reject) => {
         axios.post(`${process.env.BASE_URL}${endpoint}`, form)

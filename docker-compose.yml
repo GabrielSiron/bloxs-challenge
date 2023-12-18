@@ -31,6 +31,7 @@ services:
             DB_USER: root
             DB_PASSWORD: ''
             DB_DRIVER: mysql
+            SECRET_KEY: l8N8ZwSNiL
         expose:
             - '5000'
         ports:

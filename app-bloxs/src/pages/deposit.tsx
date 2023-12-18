@@ -19,8 +19,6 @@ export default function Deposit() {
   }
 
   const router = useRouter()
-  const [inputError, setInputError] = useState(false)
-  const [inputMessageError, setInputMessageError] = useState('')
   const [apiMessageError, setApiMessageError] = useState('')
   const [open, setOpen] = useState(false);
   const [disableSendButton, setSendButton] = useState(true)
@@ -32,14 +30,14 @@ export default function Deposit() {
 
   const DepositMoney = () => {
     var deposit_form = {
-      value: parseFloat(form.value), 
+      value: parseFloat(form.value.replace(',', '.')), 
       destination_account_id: form.destination_account_id
     }
 
     sendDeposit(deposit_form)
       
       .then((data) => {
-        router.push('/home')
+        router.push('/transactions')
       })
       .catch((error) => {
         setOpen(true)
@@ -57,6 +55,7 @@ export default function Deposit() {
             <TextField
               className={styles.input}
               label="Valor de Depósito"
+              type="number"
               variant="outlined"
               placeholder="0,00"
               InputProps={{

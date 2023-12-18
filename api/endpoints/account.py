@@ -5,6 +5,7 @@ from models import Account
 from models import AccountType
 from models import Person
 from validators import CreateAccountValidator, ChangePasswordValidator, LoginValidator, GetAccountInfo
+from utils import encode_auth_token
 
 account_routes = APIBlueprint('account', __name__)
 
@@ -55,7 +56,11 @@ def login(json_data):
         .first()
     
     if account:
-        return {'message': 'Logged in'}
+        token = encode_auth_token(account.id)
+        return {
+            'message': 'Logged in',
+            'token': token
+        }
     
     abort(400, 'Unable to login')
 
