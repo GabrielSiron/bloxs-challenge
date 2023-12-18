@@ -15,8 +15,9 @@ export default function SignUp() {
 
   const SignUp = () => {
     signUpRequest(form)
-      .then((data) => {
-        router.push("/home");
+    .then(async (response) => {
+      await localStorage.setItem("token", response?.data?.token)
+      router.push("/transactions");
       })
       .catch((err) => {
         alert("Failed");
