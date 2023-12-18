@@ -133,7 +133,6 @@ export default function Withdrawal() {
             {apiMessageError}
           </Alert>
       </Collapse>
-      <p>{form.value}</p>
     </>
   )
 }

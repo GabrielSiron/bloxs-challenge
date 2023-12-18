@@ -36,3 +36,15 @@ export const listTransactions = () => {
             })
     })
 }
+
+export const makePix = (form: any) => {
+    return new Promise((resolve, reject) => {
+        basePostRequest('/pix', form)
+        .then((response) => {
+            resolve(response)
+        })
+        .catch((error) => {
+            reject(error)
+        })
+    })   
+}

@@ -6,7 +6,7 @@ import BloxsLogo from '../../assets/img/bloxs-logo.png'
 
 export default function Header(props: any){
     
-    const tabs = ['/home', '/account', '/transaction', 'deposit', 'withdrawal']
+    const tabs = ['/home', '/account', '/transaction', 'deposit', 'withdrawal', '/pix']
     const router = useRouter()
     const redirect = (index: number) => {
         router.push(tabs[index])
