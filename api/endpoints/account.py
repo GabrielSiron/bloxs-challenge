@@ -69,6 +69,7 @@ def get_account_info():
     if account:
         return {
             'message': 'ok',
+            'id': account.id,
             'amount': account.amount,
             'email': account.email,
             'name': account.person_relation.name,
@@ -76,3 +77,20 @@ def get_account_info():
         }
     
     abort(404, "User was not found")
+
+@account_routes.get('/pix-key')
+def find_pix_key():
+    query = request.args
+    document_number = query['document_number'].replace('-', '').replace('.', '')
+    account = Account.query \
+        .join(Account.person_relation) \
+        .filter_by(document_number=document_number) \
+        .first()
+    
+    if account:
+        return {
+            'message': 'Usuário encontrado!',
+            'id': account.id
+        }
+    
+    abort(400, "Chave pix não foi encontrada. Verifique-a e tente novamente.")
