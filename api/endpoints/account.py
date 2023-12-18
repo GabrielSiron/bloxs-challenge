@@ -1,9 +1,10 @@
 from apiflask import APIBlueprint, abort
+from flask import request
 from services import db
 from models import Account
 from models import AccountType
 from models import Person
-from validators import CreateAccountValidator, ChangePasswordValidator, LoginValidator
+from validators import CreateAccountValidator, ChangePasswordValidator, LoginValidator, GetAccountInfo
 
 account_routes = APIBlueprint('account', __name__)
 
@@ -57,3 +58,21 @@ def login(json_data):
         return {'message': 'Logged in'}
     
     abort(400, 'Unable to login')
+
+@account_routes.get('/account')
+def get_account_info():
+    query = request.args
+    account = Account.query \
+        .filter_by(email=query['email']) \
+        .first()
+    
+    if account:
+        return {
+            'message': 'ok',
+            'amount': account.amount,
+            'email': account.email,
+            'name': account.person_relation.name,
+            'document_number': account.person_relation.document_number
+        }
+    
+    abort(404, "User was not found")
