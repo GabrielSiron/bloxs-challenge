@@ -1,0 +1,55 @@
+.header {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    gap: 30px;
+    padding: 0px 20px;
+    height: 64px;
+    background-color: #fff;
+}
+
+.name, .accountType, .amount {
+    font-family: "Roboto","Helvetica","Arial",sans-serif;
+} 
+
+.tabContainer {
+    position: relative;
+    cursor: pointer;
+}
+
+.notSelected {
+    text-transform: none;
+    font-weight: 500;
+    margin: 4px;
+    font-size: 14px;
+    color: #333333;
+}
+
+.selected {
+    text-transform: none;
+    position: relative;
+    font-weight: 500;
+    margin: 4px;
+    font-size: 14px;
+    color: #5dade3;
+}
+
+.circle {
+    position: absolute;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    margin-top: 4px;
+    width: 10px;
+    height: 10px;
+    background-color: #5dade3;
+    border-radius: 50%;
+}
+
+.enterpriseName {
+    margin: 0;
+}
