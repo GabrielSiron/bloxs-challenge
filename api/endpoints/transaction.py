@@ -8,7 +8,7 @@ from validators import MakeTransfer, MakeWithdrawal, MakeDeposit
 
 transaction_routes = APIBlueprint('transaction', __name__)
 
-@transaction_routes.post('/transfer')
+@transaction_routes.post('/pix')
 @transaction_routes.input(MakeTransfer)
 def make_transfer(json_data):
     from datetime import datetime
@@ -16,9 +16,12 @@ def make_transfer(json_data):
     origin_account_id = json_data['origin_account_id']
     destination_account_id = json_data['destination_account_id']
     
+    if origin_account_id == destination_account_id:
+        abort(400, "Não é possível fazer um pix com origem e destino iguais.")
+        
     origin_account = Account.query.filter_by(id=origin_account_id).first()
     destination_account = Account.query.filter_by(id=destination_account_id).first()
-
+    
     if not origin_account:
         abort(404, 'Origin user not found')
         

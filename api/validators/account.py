@@ -1,5 +1,5 @@
 from apiflask import Schema
-from apiflask.fields import String, DateTime
+from apiflask.fields import String, Integer, DateTime
 from apiflask.validators import Length
 
 
@@ -18,3 +18,6 @@ class ChangePasswordValidator(Schema):
 class LoginValidator(Schema):
     email = String(required=True, validate=Length(0, 50))
     password = String(required=True, validate=Length(0, 50))
+
+class GetAccountInfo(Schema):
+    email = String(required=True, validate=Length(0, 50))

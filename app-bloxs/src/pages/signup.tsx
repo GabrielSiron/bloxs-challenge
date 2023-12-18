@@ -1,5 +1,5 @@
 import styles from "../styles/auth.module.css";
-import { signUpRequest } from "@/api/index";
+import { signUpRequest } from "@/api/auth";
 import { useRouter } from "next/navigation";
 
 export default function SignUp() {
