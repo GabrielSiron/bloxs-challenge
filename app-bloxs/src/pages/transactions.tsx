@@ -13,7 +13,8 @@ import PixIcon from '@mui/icons-material/Pix';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import IconButton from '@mui/material/IconButton';
-import LoadingButton from '@mui/material'
+import Image from 'next/image';
+import NoTransactions from '../assets/img/no-items.jpg';
 
 import { useState, useEffect } from 'react'
 
@@ -50,62 +51,72 @@ export default function Transactions() {
       <title>Transações</title>
       <Header tabIndex="2"></Header>
       <div className={styles.page}>
-        <div className={styles.card}>
-        <List sx={{ width: '90%'}}>
-          {
-            transactions.map((transaction: any) => (
-                <ListItem  key={transaction.id} secondaryAction={<p>R$ {transaction.value}</p>}>
-                  {
-                      transaction.origin_account_id && transaction.destination_account_id? 
-                      <>
-                        <ListItemAvatar>
-                          <Avatar>
-                            <PixIcon sx={{  }}/>
-                          </Avatar>
-                        </ListItemAvatar>
-                        <ListItemText primary={'Transferencia para ' + transaction.destination_account_name} secondary={
-                          `${(new Date(transaction.date)).toLocaleString()}`
-                        } />
-                      </>
-                       : transaction.origin_account_id?
-                       (
-                        <>
-                          <ListItemAvatar>
-                            <Avatar>
-                              <NorthEastIcon sx={{ color: red[200] }}/>
-                            </Avatar>
-                          </ListItemAvatar>
-                          <ListItemText primary="Saque" secondary={
-                            `${(new Date(transaction.date)).toLocaleString()}`
-                          } />
-                        </>
-                       )
-                       : 
-                       <>
-                          <ListItemAvatar>
-                            <Avatar>
-                              <SouthWestIcon sx={{ color: green[300] }}/>
-                            </Avatar>
-                          </ListItemAvatar>
-                          <ListItemText primary="Deposito" secondary={
-                            `${(new Date(transaction.date)).toLocaleString()}`
-                          } />
-                        </>
-                  }
-                </ListItem> 
-              )
-            )
-          }
-        </List>
-        <div className={styles.btnContainer}>
-          <IconButton disabled={!hasPrev} onClick={() => setPage(prevPage)} className={styles.leftButton} aria-label="fingerprint" sx={{ color: blue[200] }} size="large">
-            <ChevronLeftIcon />
-          </IconButton>
-          <IconButton disabled={!hasNext} onClick={() => setPage(nextPage)} className={styles.rightButton} aria-label="fingerprint" sx={{ color: blue[200] }} size="large">
-            <ChevronRightIcon />
-          </IconButton>
-        </div>
-        </div>
+        {
+          transactions.length > 0 && 
+            <div className={styles.card}>
+            <List sx={{ width: '90%'}}>
+              {
+                transactions.map((transaction: any) => (
+                    <ListItem  key={transaction.id} secondaryAction={<p>R$ {transaction.value}</p>}>
+                      {
+                          transaction.origin_account_id && transaction.destination_account_id? 
+                          <>
+                            <ListItemAvatar>
+                              <Avatar>
+                                <PixIcon sx={{  }}/>
+                              </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText primary={'Transferencia para ' + transaction.destination_account_name} secondary={
+                              `${(new Date(transaction.date)).toLocaleString()}`
+                            } />
+                          </>
+                          : transaction.origin_account_id?
+                          (
+                            <>
+                              <ListItemAvatar>
+                                <Avatar>
+                                  <NorthEastIcon sx={{ color: red[200] }}/>
+                                </Avatar>
+                              </ListItemAvatar>
+                              <ListItemText primary="Saque" secondary={
+                                `${(new Date(transaction.date)).toLocaleString()}`
+                              } />
+                            </>
+                          )
+                          : 
+                          <>
+                              <ListItemAvatar>
+                                <Avatar>
+                                  <SouthWestIcon sx={{ color: green[300] }}/>
+                                </Avatar>
+                              </ListItemAvatar>
+                              <ListItemText primary="Deposito" secondary={
+                                `${(new Date(transaction.date)).toLocaleString()}`
+                              } />
+                            </>
+                      }
+                    </ListItem> 
+                  )
+                )
+              }
+            </List>
+            <div className={styles.btnContainer}>
+              <IconButton disabled={!hasPrev} onClick={() => setPage(prevPage)} className={styles.leftButton} aria-label="fingerprint" sx={{ color: blue[200] }} size="large">
+                <ChevronLeftIcon />
+              </IconButton>
+              <IconButton disabled={!hasNext} onClick={() => setPage(nextPage)} className={styles.rightButton} aria-label="fingerprint" sx={{ color: blue[200] }} size="large">
+                <ChevronRightIcon />
+              </IconButton>
+            </div>
+          </div>
+        }
+        {
+          transactions.length == 0 &&
+          <div className={styles.noDataContainer}>
+            <h2 className={styles.noDataText}>Sem transações (por enquanto...)</h2>
+            <Image className={styles.noDataImage} src={NoTransactions} alt='Sem transações'/>
+          </div>
+        }
       </div>
     </div>
   )
