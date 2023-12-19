@@ -39,3 +39,19 @@
 .rightButton {
     float: right;
 }
+
+.noDataContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.noDataImage {
+    width: 500px;
+    height: auto;
+}
+
+.noDataText {
+    font-size: 2rem;
+    font-weight: 200;
+    color: #333333 !important;
+}
