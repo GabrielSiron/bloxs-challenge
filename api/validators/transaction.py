@@ -1,11 +1,11 @@
 from apiflask import Schema
-from apiflask.fields import Integer, Float
+from apiflask.fields import Integer, String, Float
 
 
-class MakeTransfer(Schema):
+class MakePix(Schema):
     value = Float(required=True)
     origin_account_id = Integer(required=True)
-    destination_account_id = Integer(required=True)
+    pix_key = String(required=True)
 
 class MakeWithdrawal(Schema):
     value = Float(required=True)
