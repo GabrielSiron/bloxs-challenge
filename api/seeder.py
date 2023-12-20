@@ -25,7 +25,7 @@ def seed_database():
         first_person.document_number = '99999999999'
 
         first_account = Account()
-        first_account.email = 'test@bloxs.com.br'
+        first_account.email = 'test@bloxs.com'
         first_account.password = 'password'
         first_account.amount = 10000.00
         first_account.person_relation = first_person
