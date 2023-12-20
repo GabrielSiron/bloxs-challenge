@@ -11,7 +11,7 @@ class Account(db.Model):
     updated_at = db.Column(db.DateTime, onupdate=func.now())
     email = db.Column(db.String(50), nullable=False, unique=True)
     password = db.Column(db.String(50), nullable=False)
-    amount = db.Column(db.Numeric, nullable=False, default=0.0)
+    amount = db.Column(db.Numeric(10, 2), nullable=False, default=0.0)
     is_active = db.Column(db.Boolean, default=True, nullable=False)
     
     person_id = db.Column(db.Integer, db.ForeignKey("person.id"), unique=True)
@@ -26,9 +26,17 @@ class Account(db.Model):
     @classmethod
     def __declare_last__(cls):
         event.listen(cls, "before_insert", cls.lowercase)
+        event.listen(cls, "before_insert", cls.add_account_type)
 
     @staticmethod
     def lowercase(mapper, connection, target):
         target.email = target.email.lower()
+
+    @staticmethod
+    def add_account_type(mapper, connection, target):
+        from sqlalchemy import select
+        query = select(AccountType.id).where(AccountType.title == 'Gold')
+        gold_account_type = db.session.execute(query).first()
+        target.account_type_id = gold_account_type.id
 
     
