@@ -29,14 +29,13 @@ export default function Withdrawal() {
   const [disableSendButton, setSendButton] = useState(true)
   const [amount, setAmount] = useState(0.00)
 
-  const querystring = 'email=testing.bloxs@gmail.com'
-    getAccountInfo(querystring)
-      .then((response: any) => {
-        setAmount(response?.data?.amount)
-      })
-      .catch((error) => {
+  getAccountInfo()
+    .then((response: any) => {
+      setAmount(response?.data?.amount)
+    })
+    .catch((error) => {
 
-      })
+    })
 
   useEffect(() => {
       checkInputLimit(form.value)
