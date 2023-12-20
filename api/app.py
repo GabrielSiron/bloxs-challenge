@@ -1,19 +1,22 @@
-import os
-from time import sleep
-
 from apiflask import APIFlask, abort
+from datetime import datetime
 from flask_migrate import Migrate
 from flask_cors import CORS
+import jwt
+import os
 import sqlalchemy
+from time import sleep
+from werkzeug.datastructures import ImmutableMultiDict
 
 from endpoints import account_routes
 from endpoints import transaction_routes
 from services import db
 from seeder import seed_database
-import jwt
-from utils import token_has_expired
-from datetime import datetime
+
+
 import models
+from utils import token_has_expired
+
 
 def create_app():
     app = APIFlask(__name__)
@@ -50,7 +53,7 @@ def create_app():
         if request.path in ['/login', '/signup']:
             return
         
-        token = request.headers.get('authorization')
+        token = request.headers.get('Authorization')
 
         if token:
             try:
@@ -59,6 +62,10 @@ def create_app():
                 if token_has_expired(expiration_date):
                     abort(403, 'Token has expired. Please log in')
 
+                http_args = request.args.to_dict()
+                http_args['account_id'] = payload['account_id']
+
+                request.args = ImmutableMultiDict(http_args)
             except Exception as e:
                 abort(403, str(e))
         else:
