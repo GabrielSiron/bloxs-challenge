@@ -44,6 +44,11 @@ def seed_database():
         second_account.person_relation = second_person
         second_account.account_type_relation = diamond_account_type
         
-        db.session.add(diamond_account_type)
-        db.session.add_all([first_account,second_account])
-        db.session.commit()
+        try:
+            db.session.add(diamond_account_type)
+            db.session.add_all([first_account,second_account])
+            db.session.commit()
+        except:
+            db.session.rollback()
+        finally:
+            db.session.close()

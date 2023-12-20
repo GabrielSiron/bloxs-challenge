@@ -32,8 +32,13 @@ def create_account(json_data):
     
     account.person_relation = person
     
-    db.session.add(account)
-    db.session.commit()
+    try:
+        db.session.add(account)
+        db.session.commit()
+    except:
+        db.session.rollback()
+    finally:
+        db.session.close()
 
     return {'message': 'Account created successfully'}
 
@@ -47,9 +52,16 @@ def change_password(json_data):
     account = db.session.execute(query).scalar_one()
     
     if account and account.password == json_data['current_password']:
-        account.password = json_data['new_password']
-        db.session.commit()
+        try:
+            account.password = json_data['new_password']
+            db.session.commit()
+        except:
+            db.session.rollback()
+        finally:
+            db.session.close()
+        
         return {'message': 'Sucessfully changed password'}
+    
     abort(400, 'Unable to change password')
 
 @account_routes.post('/login')
@@ -98,8 +110,13 @@ def unblock_account():
         .filter_by(id=request.args['account_id'])
     
     account = db.session.execute(query).scalar_one()
-    account.is_active = True
-    db.session.commit()
+    try:
+        account.is_active = True
+        db.session.commit()
+    except:
+        db.session.rollback()
+    finally:
+        db.session.close()
     return {'message': 'Conta ativa'}
 
 def find_user_by_pix_key():
