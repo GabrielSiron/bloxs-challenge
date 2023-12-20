@@ -4,15 +4,12 @@ from flask_migrate import Migrate
 from flask_cors import CORS
 import jwt
 import os
-import sqlalchemy
-from time import sleep
 from werkzeug.datastructures import ImmutableMultiDict
 
 from endpoints import account_routes
 from endpoints import transaction_routes
 from services import db
 from seeder import seed_database
-
 
 import models
 from utils import token_has_expired

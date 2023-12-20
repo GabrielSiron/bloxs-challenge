@@ -1,6 +1,7 @@
 from apiflask import APIBlueprint, abort
 from flask import request
 from sqlalchemy import select
+from sqlalchemy.exc import NoResultFound
 from services import db
 from models import Account
 from models import Person
@@ -82,28 +83,26 @@ def get_account_info():
             'amount': account.amount,
             'email': account.email,
             'name': account.person_relation.name,
-            'document_number': account.person_relation.document_number
+            'document_number': account.person_relation.document_number,
+            'is_active': account.is_active
         }
     
     abort(404, "User was not found")
 
-@account_routes.get('/pix-key')
-def find_pix_key():
-    document_number = clean_document_number(request.args['document_number'])
+
+def find_user_by_pix_key():
+    document_number = clean_document_number(request.json['pix_key'])
 
     query = select(Account) \
         .join(Account.person_relation) \
         .filter_by(document_number=document_number) 
     
-    account = db.session.execute(query).scalar_one()
-
-    if account:
-        return {
-            'message': 'Usuário encontrado!',
-            'id': account.id
-        }
+    try:
+        account = db.session.execute(query).scalar_one()
+        return account
+    except NoResultFound:
+        abort(401, "Chave pix não encontrada. Tente novamente, prestando atenção nos dígitos inseridos.")
     
-    abort(400, "Chave pix não foi encontrada. Verifique-a e tente novamente.")
 
 def clean_document_number(document_number):
     document_number = document_number.replace('-',  '')
