@@ -4,7 +4,6 @@ import Header from '../components/header/header';
 import { useState, useEffect } from 'react';
 
 import { getAccountInfo, blockAccount, unblockAccount } from '../api/account';
-import Button from '@mui/material/Button';
 
 import Image from "next/image"
 import CallToAction from '../assets/img/profile.jpg'
@@ -13,9 +12,20 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 
-import { yellow } from '@mui/material/colors';
+import { useRouter } from 'next/navigation';
 
 export default function Account() {
+
+  const router = useRouter();
+
+  const activateAccount = () => {
+    unblockAccount()
+    .then(() => {
+      router.refresh()
+    }).catch(() => {
+
+    })
+  }
 
   const [user, setUser] = useState({
     amount: 0,
@@ -50,11 +60,22 @@ export default function Account() {
       <title>Minha Conta</title>
       <Header tabIndex="1"></Header>
       <div className={styles.page}>
-        <h2 className={styles.helloText}>Olá, {user.name}.</h2>
+        {
+          user.is_active == true && 
+          <h2 className={styles.helloText}>Olá, {user.name}. Sua conta está <span className={styles.activeAccount}>Ativa.</span></h2>
+        }
+        {
+          user.is_active == false && 
+          <h2 className={styles.helloText}>Olá, {user.name}. Sua conta está 
+            <span className={styles.desactiveAccount}> Inativa. </span>Clique <span className={styles.activateAccount} onClick={() => {activateAccount(); return false}}>aqui</span> para Ativar
+          </h2>
+        }
         <div className={styles.dataContainer}>
+          <div className={styles.callToAction}>
+            <Image src={CallToAction} alt='call' className={styles.bankIcon} width={600} height={600}/>
+          </div>
           <div className={styles.personalData}>
-          <h3 className={styles.sectionTitle}>Dados Pessoais</h3>
-            <List sx={{ width: '90%'}}>
+            <List sx={{ width: '40%'}}>
               <ListItem>
                 <ListItemText primary="Nome" secondary={user.name} />
               </ListItem>
@@ -68,16 +89,8 @@ export default function Account() {
                 <ListItemText primary="Saldo" secondary={'R$' + user.amount} />
               </ListItem>
             </List>
-            {
-              !user.is_active? 
-                <Button className={styles.activateAccountButton} variant="contained" onClick={() => blockAccount()}> Ativar Conta</Button> 
-                  : 
-                <Button className={styles.activateAccountButton} sx={{ backgroundColor: yellow[900] }} variant="contained" onClick={() => unblockAccount()}> Desativar Conta</Button>
-            }
           </div>
-          <div className={styles.callToAction}>
-            <Image src={CallToAction} alt='call' className={styles.bankIcon} width={600} height={600}/>
-          </div>
+          
         </div>  
       </div>
     </div>

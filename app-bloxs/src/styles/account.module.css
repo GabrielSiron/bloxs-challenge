@@ -10,10 +10,24 @@
 }
 
 .helloText {
-    font-size: 40px;
+    font-size: 2.5rem;
+    padding-left: 40px;
     font-family: 'Poppins', sans-serif;
     color: #3dadea;
     margin-bottom: 0;
+}
+
+.activeAccount {
+    color: #2ecc71;
+}
+
+.desactiveAccount {
+    color: #f39c12;
+}
+
+.activateAccount {
+    color: #333;
+    cursor: pointer;
 }
 
 .amountText {
@@ -33,22 +47,23 @@
 
 .callToAction {
     width: 100%;
-    display: inline;
-    align-items: start;
-    justify-content: start;
+    display: flex;
+    align-items: end;
+    justify-content: end;
 }
 
 .personalData {
     width: 100%;
     display: flex;
-    align-items: end;
+    align-items: center;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: start;
 }
 
 .sectionTitle {
     padding-top: 40px;
     font-size: 24px;
+    margin: 0;
     font-family: 'Poppins', sans-serif;
 }
 
