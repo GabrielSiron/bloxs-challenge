@@ -45,8 +45,15 @@ def make_transfer(json_data):
     transaction = create_transaction(json_data)
     origin_account.amount -= transaction.value
     destination_account.amount += transaction.value
-    db.session.add_all([transaction, origin_account, destination_account])
-    db.session.commit()
+
+    try:
+        db.session.add_all([transaction, origin_account, destination_account])
+        db.session.commit()
+    except:
+        db.session.rollback()
+    finally:
+        db.session.close()
+
     return {'message': 'transaction ended successfully'}
 
 @transaction_routes.post('/withdrawal')
@@ -78,8 +85,14 @@ def make_withdrawal(json_data):
     if transfered_amount < origin_account.account_type_relation.daily_limit:
         transaction = create_transaction(json_data)
         origin_account.amount -= transaction.value
-        db.session.add_all([transaction, origin_account])
-        db.session.commit()
+        try:
+            db.session.add_all([transaction, origin_account])
+            db.session.commit()
+        except:
+            db.session.rollback()
+        finally:
+            db.session.close()
+        
         return {'message': 'withdrawal ended successfully'}
     abort(400, 'daily limit exceeded')
 
@@ -98,8 +111,14 @@ def make_deposit(json_data):
 
     transaction = create_transaction(json_data)
     destination_account.amount += transaction.value
-    db.session.add_all([transaction, destination_account])
-    db.session.commit()
+    try:
+        db.session.add_all([transaction, destination_account])
+        db.session.commit()
+    except:
+        db.session.rollback()
+    finally:
+        db.session.close()
+
     return {'message': 'deposit ended successfully'}
 
 @transaction_routes.get('/transactions')
@@ -179,9 +198,15 @@ def verify_transaction(json_data, origin_account, destination_account = None):
         
         try: 
             db.session.execute(query).scalar_one()
-        except NoResultFound:
-            origin_account.is_active = False
-            db.session.commit()
+        except NoResultFound:            
+            try:
+                origin_account.is_active = False
+                db.session.commit()
+            except:
+                db.session.rollback()
+            finally:
+                db.session.close()
+
             abort(400, 'Conta Bloqueada por Transação Suspeita. Ative-a na aba "Minha Conta"')
 
 def account_is_active():

@@ -25,7 +25,7 @@ def seed_database():
         first_person.document_number = '99999999999'
 
         first_account = Account()
-        first_account.email = 'test@bloxs.com.br'
+        first_account.email = 'test@bloxs.com'
         first_account.password = 'password'
         first_account.amount = 10000.00
         first_account.person_relation = first_person
@@ -44,6 +44,11 @@ def seed_database():
         second_account.person_relation = second_person
         second_account.account_type_relation = diamond_account_type
         
-        db.session.add(diamond_account_type)
-        db.session.add_all([first_account,second_account])
-        db.session.commit()
+        try:
+            db.session.add(diamond_account_type)
+            db.session.add_all([first_account,second_account])
+            db.session.commit()
+        except:
+            db.session.rollback()
+        finally:
+            db.session.close()
