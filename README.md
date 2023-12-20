@@ -1,43 +1,46 @@
 # bloxs-challenge
 
-## step by step
+Olá! Esse é o resultado do meu processo seletivo para entrar na Bloxs.
 
-`python -m venv env`
-`env/Scripts/activate`
+O sistema desenvolvido aqui tem o intuito de simular um site para um banco, realizando operações comuns
+dentro desse contexto, como depósito, saques e listagens de transferências.
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Como Rodar
 
-## Getting Started
+A aplicação está completamente dockerizada. Portanto, uma vez que o repositório esteja na sua máquina (e que você possua o docker-compose instalado), rode os seguintes comandos:
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+$ docker network create backend
+$ docker volume create db-volume
+$ docker-compose build
+$ docker-compose up
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Como Usar
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Desenvolvi um seed para a aplicação que alimenta o banco de dados com dois usuários:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- Gabriel Siron:
+  - email: gabriel@bloxs.com
+  - senha: password
+  - tipo de conta: Gold (Limite diário de 500 reais)
+  - cpf: 999.999.999-99 
 
-## Learn More
+- Lucas Ayres:
+  - email: lucas@bloxs.com
+  - senha: password
+  - tipo de conta: Diamond (Limite diário de 1500 reais)
+  - cpf: 888.888.888-88
 
-To learn more about Next.js, take a look at the following resources:
+Ambas as contas iniciam com um montante de R$10.000,00.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Os tipos de transações possíveis são:
+- Saque
+- Depósito
+- Transferência (Pix)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+O Pix exige que se use o cpf de outro usuário como chave (assim como funciona na vida real). Saque e Depósito só dependem do valor sacado/depositado.
 
-## Deploy on Vercel
+Existe uma modalidade de bloqueio automático. Para testar essa feature, tente realizar uma transação com 70% do limite diário. 
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Exemplo: limite diário de R$500,00, o valor da transação deve ser de, pelo menos, R$350,01.
