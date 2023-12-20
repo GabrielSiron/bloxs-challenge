@@ -7,6 +7,9 @@ from models import Person
 from validators import CreateAccountValidator, ChangePasswordValidator, LoginValidator, GetAccountInfo
 from utils import encode_auth_token
 
+import os
+import jwt
+
 account_routes = APIBlueprint('account', __name__)
 
 @account_routes.post('/account')
@@ -66,9 +69,10 @@ def login(json_data):
 
 @account_routes.get('/account')
 def get_account_info():
-    query = request.args
+    token = request.headers.get('Authorization')
+    payload = jwt.decode(token, os.getenv('SECRET_KEY'), algorithms=['HS256'])
     account = Account.query \
-        .filter_by(email=query['email']) \
+        .filter_by(id=payload['user_id']) \
         .first()
     
     if account:
@@ -78,7 +82,8 @@ def get_account_info():
             'amount': account.amount,
             'email': account.email,
             'name': account.person_relation.name,
-            'document_number': account.person_relation.document_number
+            'document_number': account.person_relation.document_number,
+            'is_active': account.is_active
         }
     
     abort(404, "User was not found")
