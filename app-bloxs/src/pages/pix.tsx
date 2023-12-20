@@ -1,4 +1,4 @@
-import styles from "../styles/withdrawal.module.css"
+import styles from "../styles/pix.module.css"
 import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
 
@@ -18,76 +18,51 @@ export default function Pix() {
   
   const router = useRouter()
 
-  const [searchForm, setForm] = useState({
-    document_number: ''
-  })
-
   const [transferenceForm, setTransferenceForm] = useState({
     value: '',
     origin_account_id: undefined,
-    destination_account_id: undefined
+    pix_key: ''
   })
 
   const [inputError, setInputError] = useState(false)
   const [textValueError, setTextValueError] = useState('')
-  const [documentNumberIsOk, setDocumentNumberIsOk] = useState(false)
+
   const [transferenceValueIsOk, setTransferenceValueIsOk] = useState(false)
   const [apiMessageError, setApiMessageError] = useState('')
   const [open, setOpen] = useState(false);
   const [amount, setAmount] = useState(0.00)
 
+  const formatDocumentNumber = (value: string) => {
+    if(value.length == 3 && transferenceForm.pix_key.length == 2) return value + '.'
+    if(value.length == 7 && transferenceForm.pix_key.length == 6) return value + '.'
+    if(value.length == 11 && transferenceForm.pix_key.length == 10) return value + '-'
+    return value
+  }
+
   useEffect(() => {
-    setInputError(false)
-    const querystring = 'email=testing.bloxs@gmail.com'
-    if(amount == 0){
-        getAccountInfo(querystring)
-            .then((response: any) => {
-                setAmount(response?.data?.amount)
-                setTransferenceForm({...transferenceForm, origin_account_id: response?.data?.id})
-            })
-            .catch((error) => {
-
-            })
-    }
-    
-  }, [searchForm])
-
-  const searchUser = () => {
-    getUserByDocumentNumber(`document_number=${searchForm.document_number}`)
+    getAccountInfo()
     .then((response: any) => {
-        setTransferenceForm({...transferenceForm, destination_account_id: response?.data?.id})
+        setAmount(response?.data?.amount)
+        setTransferenceForm({...transferenceForm, origin_account_id: response?.data?.id})
     })
     .catch((error) => {
-        setInputError(true)
-        setOpen(true)
-        setApiMessageError(error.response.data.message)
+
     })
-  }
+  }, [])
 
-    const transferMoney = () => {
-        makePix(transferenceForm)
-            .then((response: any) => {
-                router.push('/transactions')
-            })
-            .catch((error) => {
-                setOpen(true)
-                setApiMessageError(error.response.data.message)
-            })
-  }
-  
-  
-  useEffect(() => {
-    if(transferenceForm.destination_account_id && transferenceForm.origin_account_id) {
-        console.log();
-        
-        transferMoney()   
-    }
-  }, [transferenceForm])
-
-  const updateDocumentNumber = (document_number: string) => {
-    setForm({document_number: document_number})
-    if (document_number.length == 14) setDocumentNumberIsOk(true)
-    else setDocumentNumberIsOk(false)
+  const transferMoney = () => {
+      makePix(transferenceForm)
+          .then((response: any) => {
+              router.push('/transactions')
+          })
+          .catch((error) => {
+              setOpen(true);
+              console.log(error);
+              setApiMessageError(error?.response?.data?.message);
+              setTimeout(() => {
+                setOpen(false);
+              }, 5000)
+          })
   }
 
   const updateValue = (value: string) => {
@@ -128,7 +103,8 @@ export default function Pix() {
               variant="outlined"
               placeholder="999.999.999.99"
               onChange={(e: any) => {
-                updateDocumentNumber(e.target.value)
+                e.currentTarget.value = formatDocumentNumber(e.currentTarget.value);
+                setTransferenceForm({...transferenceForm, pix_key: formatDocumentNumber(e.currentTarget.value)})
               }}
             />
 
@@ -151,8 +127,8 @@ export default function Pix() {
             <Button
               className={styles.button}
               variant="contained"
-              disabled={!transferenceValueIsOk || !documentNumberIsOk}
-              onClick={searchUser}
+              disabled={!transferenceValueIsOk}
+              onClick={() => {transferMoney()}}
             >
               Enviar Pix
             </Button>

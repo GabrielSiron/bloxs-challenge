@@ -1,10 +1,15 @@
 from apiflask import APIBlueprint, abort
 from flask import request
+from sqlalchemy import select
+from sqlalchemy.exc import NoResultFound
 from services import db
 from models import Account
-from models import AccountType
 from models import Person
-from validators import CreateAccountValidator, ChangePasswordValidator, LoginValidator, GetAccountInfo
+
+from validators import (CreateAccountValidator, 
+                        ChangePasswordValidator, 
+                        LoginValidator)
+
 from utils import encode_auth_token
 
 import os
@@ -12,7 +17,7 @@ import jwt
 
 account_routes = APIBlueprint('account', __name__)
 
-@account_routes.post('/account')
+@account_routes.post('/signup')
 @account_routes.input(CreateAccountValidator)
 def create_account(json_data):
     person = Person()
@@ -25,12 +30,8 @@ def create_account(json_data):
     account.email = json_data['email']
     account.password = json_data['password']
     
-    gold_account_type = AccountType.query.filter_by(title='Gold') \
-        .with_entities(AccountType.id) \
-        .first()
-    
-    account.account_type_id = gold_account_type.id
     account.person_relation = person
+    
     db.session.add(account)
     db.session.commit()
 
@@ -40,9 +41,10 @@ def create_account(json_data):
 @account_routes.input(ChangePasswordValidator)
 def change_password(json_data):
     
-    account = Account.query \
+    query = select(Account) \
         .filter_by(email=json_data['email']) \
-        .first()
+    
+    account = db.session.execute(query).scalar_one()
     
     if account and account.password == json_data['current_password']:
         account.password = json_data['new_password']
@@ -53,10 +55,11 @@ def change_password(json_data):
 @account_routes.post('/login')
 @account_routes.input(LoginValidator)
 def login(json_data):
-    account = Account.query \
+    query = select(Account) \
         .filter_by(email=json_data['email']) \
-        .filter_by(password=json_data['password']) \
-        .first()
+        .filter_by(password=json_data['password'])
+    
+    account = db.session.execute(query).scalar_one()
     
     if account:
         token = encode_auth_token(account.id)
@@ -69,11 +72,12 @@ def login(json_data):
 
 @account_routes.get('/account')
 def get_account_info():
-    token = request.headers.get('Authorization')
-    payload = jwt.decode(token, os.getenv('SECRET_KEY'), algorithms=['HS256'])
-    account = Account.query \
-        .filter_by(id=payload['user_id']) \
-        .first()
+    id = request.args['account_id']
+
+    query = select(Account) \
+        .filter_by(id=id)
+    
+    account = db.session.execute(query).scalar_one()
     
     if account:
         return {
@@ -88,19 +92,22 @@ def get_account_info():
     
     abort(404, "User was not found")
 
-@account_routes.get('/pix-key')
-def find_pix_key():
-    query = request.args
-    document_number = query['document_number'].replace('-', '').replace('.', '')
-    account = Account.query \
+
+def find_user_by_pix_key():
+    document_number = clean_document_number(request.json['pix_key'])
+
+    query = select(Account) \
         .join(Account.person_relation) \
-        .filter_by(document_number=document_number) \
-        .first()
+        .filter_by(document_number=document_number) 
     
-    if account:
-        return {
-            'message': 'Usuário encontrado!',
-            'id': account.id
-        }
+    try:
+        account = db.session.execute(query).scalar_one()
+        return account
+    except NoResultFound:
+        abort(401, "Chave pix não encontrada. Tente novamente, prestando atenção nos dígitos inseridos.")
     
-    abort(400, "Chave pix não foi encontrada. Verifique-a e tente novamente.")
+
+def clean_document_number(document_number):
+    document_number = document_number.replace('-',  '')
+    document_number = document_number.replace('.', '')
+    return document_number

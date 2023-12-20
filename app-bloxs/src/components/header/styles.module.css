@@ -1,6 +1,7 @@
 .header {
     position: fixed;
     display: flex;
+    z-index: 5;
     align-items: center;
     top: 0px;
     left: 0px;
