@@ -169,9 +169,6 @@ def verify_transaction(json_data, origin_account, destination_account = None):
     
     suspicious_percentage = Decimal(0.7)
     
-    if transfered_amount + json_data['value'] > origin_account.account_type_relation.daily_limit:
-        abort(400, 'Limite Diário Excedido')
-
     if transfered_amount + json_data['value'] > origin_account.account_type_relation.daily_limit * suspicious_percentage:
         query = select(Transaction) \
             .filter_by(origin_account_id=origin_account.id) \
@@ -183,6 +180,9 @@ def verify_transaction(json_data, origin_account, destination_account = None):
             origin_account.is_active = False
             db.session.commit()
             abort(400, 'Conta Bloqueada por Transação Suspeita. Ative-a na aba "Minha Conta"')
+            
+    if transfered_amount + json_data['value'] > origin_account.account_type_relation.daily_limit:
+        abort(400, 'Limite Diário Excedido')
 
 def account_is_active():
     id = request.args.get('account_id')
