@@ -92,6 +92,15 @@ def get_account_info():
     
     abort(404, "User was not found")
 
+@account_routes.put('/unblock')
+def unblock_account():
+    query = select(Account) \
+        .filter_by(id=request.args['account_id'])
+    
+    account = db.session.execute(query).scalar_one()
+    account.is_active = True
+    db.session.commit()
+    return {'message': 'Conta ativa'}
 
 def find_user_by_pix_key():
     document_number = clean_document_number(request.json['pix_key'])
@@ -104,8 +113,7 @@ def find_user_by_pix_key():
         account = db.session.execute(query).scalar_one()
         return account
     except NoResultFound:
-        abort(401, "Chave pix não encontrada. Tente novamente, prestando atenção nos dígitos inseridos.")
-    
+        abort(401, "Chave pix não encontrada. Tente novamente, prestando atenção nos dígitos inseridos.") 
 
 def clean_document_number(document_number):
     document_number = document_number.replace('-',  '')
