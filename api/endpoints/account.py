@@ -1,15 +1,19 @@
 from apiflask import APIBlueprint, abort
 from flask import request
+from sqlalchemy import select
 from services import db
 from models import Account
-from models import AccountType
 from models import Person
-from validators import CreateAccountValidator, ChangePasswordValidator, LoginValidator, GetAccountInfo
+
+from validators import (CreateAccountValidator, 
+                        ChangePasswordValidator, 
+                        LoginValidator)
+
 from utils import encode_auth_token
 
 account_routes = APIBlueprint('account', __name__)
 
-@account_routes.post('/account')
+@account_routes.post('/signup')
 @account_routes.input(CreateAccountValidator)
 def create_account(json_data):
     person = Person()
@@ -22,12 +26,8 @@ def create_account(json_data):
     account.email = json_data['email']
     account.password = json_data['password']
     
-    gold_account_type = AccountType.query.filter_by(title='Gold') \
-        .with_entities(AccountType.id) \
-        .first()
-    
-    account.account_type_id = gold_account_type.id
     account.person_relation = person
+    
     db.session.add(account)
     db.session.commit()
 
@@ -37,9 +37,10 @@ def create_account(json_data):
 @account_routes.input(ChangePasswordValidator)
 def change_password(json_data):
     
-    account = Account.query \
+    query = select(Account) \
         .filter_by(email=json_data['email']) \
-        .first()
+    
+    account = db.session.execute(query).scalar_one()
     
     if account and account.password == json_data['current_password']:
         account.password = json_data['new_password']
@@ -50,10 +51,11 @@ def change_password(json_data):
 @account_routes.post('/login')
 @account_routes.input(LoginValidator)
 def login(json_data):
-    account = Account.query \
+    query = select(Account) \
         .filter_by(email=json_data['email']) \
-        .filter_by(password=json_data['password']) \
-        .first()
+        .filter_by(password=json_data['password'])
+    
+    account = db.session.execute(query).scalar_one()
     
     if account:
         token = encode_auth_token(account.id)
@@ -66,10 +68,12 @@ def login(json_data):
 
 @account_routes.get('/account')
 def get_account_info():
-    query = request.args
-    account = Account.query \
-        .filter_by(email=query['email']) \
-        .first()
+    id = request.args['account_id']
+
+    query = select(Account) \
+        .filter_by(id=id)
+    
+    account = db.session.execute(query).scalar_one()
     
     if account:
         return {
@@ -85,13 +89,14 @@ def get_account_info():
 
 @account_routes.get('/pix-key')
 def find_pix_key():
-    query = request.args
-    document_number = query['document_number'].replace('-', '').replace('.', '')
-    account = Account.query \
+    document_number = clean_document_number(request.args['document_number'])
+
+    query = select(Account) \
         .join(Account.person_relation) \
-        .filter_by(document_number=document_number) \
-        .first()
+        .filter_by(document_number=document_number) 
     
+    account = db.session.execute(query).scalar_one()
+
     if account:
         return {
             'message': 'Usuário encontrado!',
@@ -99,3 +104,8 @@ def find_pix_key():
         }
     
     abort(400, "Chave pix não foi encontrada. Verifique-a e tente novamente.")
+
+def clean_document_number(document_number):
+    document_number = document_number.replace('-',  '')
+    document_number = document_number.replace('.', '')
+    return document_number
