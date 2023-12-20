@@ -3,9 +3,9 @@ import { baseGetRequest } from '.'
 
 if(typeof window !== 'undefined') axios.defaults.headers.common['authorization'] = `${localStorage.getItem('token')}`
 
-export const getAccountInfo = (query: string) => {
+export const getAccountInfo = () => {
     return new Promise((resolve, reject) => {
-        baseGetRequest('/account', query)
+        baseGetRequest('/account')
             .then((response) => {
                 resolve(response)
             })
