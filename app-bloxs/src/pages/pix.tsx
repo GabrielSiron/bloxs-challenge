@@ -38,9 +38,8 @@ export default function Pix() {
 
   useEffect(() => {
     setInputError(false)
-    const querystring = 'email=testing.bloxs@gmail.com'
     if(amount == 0){
-        getAccountInfo(querystring)
+        getAccountInfo()
             .then((response: any) => {
                 setAmount(response?.data?.amount)
                 setTransferenceForm({...transferenceForm, origin_account_id: response?.data?.id})
