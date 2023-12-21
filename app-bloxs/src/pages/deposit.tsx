@@ -1,4 +1,4 @@
-import styles from "../styles/deposit.module.css"
+import styles from "../styles/transfer_styles.module.css"
 import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
 
@@ -20,14 +20,8 @@ export default function Deposit() {
   const [disableSendButton, setSendButton] = useState(true)
 
   const [depositForm, setDepositForm] = useState({
-    value: 0.0
+    value: ''
   })
-
-  useEffect(() => {
-    if(depositForm == '') setSendButton(true);
-    setSendButton(false)
-
-  }, depositForm)
 
   const DepositMoney = () => {
 
@@ -42,11 +36,17 @@ export default function Deposit() {
       })
   }
 
+  const isNumeric = (value: number) => {
+    if (typeof value != "string") return false
+    return !isNaN(value) && !isNaN(parseFloat(value)) 
+  }
+
   return (
     <>
       <title>Depósito</title>
       <Header tabIndex="3"></Header>
       <div className={styles.page}>
+      <h2 className={styles.subtitle}>Depositar dinheiro nunca foi tão simples.</h2>
         <div className={styles.card}>
           <div className={styles.form}>
             <TextField
@@ -61,6 +61,8 @@ export default function Deposit() {
                 ),
               }}
               onChange={(e: any) => {
+                if(isNumeric(e.target.value)) setSendButton(false)
+                else setSendButton(true)
                 setDepositForm({value: parseFloat(e.target.value)})
               }}
             />

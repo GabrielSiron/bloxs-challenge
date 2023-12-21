@@ -1,4 +1,4 @@
-import styles from "../styles/pix.module.css"
+import styles from "../styles/transfer_styles.module.css"
 import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
 
@@ -92,7 +92,7 @@ export default function Pix() {
         <div className={styles.card}>
           
           <div className={styles.amountContainer}>
-            <h4 className={styles.description}>Saldo disponível R$ {amount}</h4>
+            <h4 className={styles.amount}>Saldo disponível R$ {amount}</h4>
           </div>
           <div className={styles.form}>
             <TextField
