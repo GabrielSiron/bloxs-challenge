@@ -11,4 +11,4 @@ class Person(db.Model):
     birth_date = db.Column(db.DateTime, nullable=False)
 
     def __repr__(self):
-        return f'<Person {self.name}>'
+        return f"<Person {self.name}>"
