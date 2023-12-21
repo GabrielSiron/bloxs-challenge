@@ -10,7 +10,7 @@ import Collapse from '@mui/material/Collapse';
 import InputAdornment from "@mui/material/InputAdornment"
 
 import { sendDeposit } from "../api/transaction"
-import Header from '../components/header/header'
+import Header from '../components/header/sidemenu'
 
 export default function Deposit() {
 

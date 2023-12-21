@@ -1,5 +1,5 @@
 import styles from '../styles/transactions.module.css'
-import Header from '../components/header/header';
+import Header from '../components/header/sidemenu';
 
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';

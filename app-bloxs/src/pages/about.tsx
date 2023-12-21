@@ -1,5 +1,5 @@
 import styles from "../styles/about.module.css";
-import Header from '../components/header/header';
+import Header from '../components/header/sidemenu';
 
 export default function Home() {
 

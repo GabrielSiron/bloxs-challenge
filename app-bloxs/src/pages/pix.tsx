@@ -9,7 +9,7 @@ import IconButton from "@mui/material/IconButton"
 import Collapse from '@mui/material/Collapse';
 import InputAdornment from "@mui/material/InputAdornment"
 
-import Header from '../components/header/header'
+import Header from '../components/header/sidemenu'
 
 import { getAccountInfo, getUserByDocumentNumber } from '../api/account'
 import { makePix } from '../api/transaction'
