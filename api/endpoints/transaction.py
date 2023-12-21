@@ -43,6 +43,7 @@ def make_transfer(json_data):
     verify_transaction(json_data, origin_account, destination_account)
 
     transaction = create_transaction(json_data)
+    transaction.origin_account_id = origin_account_id
     origin_account.amount -= transaction.value
     destination_account.amount += transaction.value
 
@@ -80,10 +81,11 @@ def make_withdrawal(json_data):
         .filter(Transaction.created_at >= initial_date) \
         .filter(Transaction.created_at <= final_date)
 
-    transfered_amount = db.session.execute(query).scalar_one()
+    transfered_amount = db.session.execute(query).scalar_one() or 0
     
     if transfered_amount < origin_account.account_type_relation.daily_limit:
         transaction = create_transaction(json_data)
+        transaction.origin_account_id = origin_account_id
         origin_account.amount -= transaction.value
         try:
             db.session.add_all([transaction, origin_account])
@@ -103,19 +105,21 @@ def make_deposit(json_data):
         abort(401, 'Conta não está ativa. Ative-a na página "Minha Conta"')
         
     destination_account_id = request.args.get('account_id')
-    
+
     query = select(Account) \
         .filter_by(id=destination_account_id)
     
     destination_account = db.session.execute(query).scalar_one()
 
     transaction = create_transaction(json_data)
+    transaction.destination_account_id = destination_account_id
     destination_account.amount += transaction.value
     try:
         db.session.add_all([transaction, destination_account])
         db.session.commit()
-    except:
+    except Exception as e:
         db.session.rollback()
+        abort(401, str(e))
     finally:
         db.session.close()
 
