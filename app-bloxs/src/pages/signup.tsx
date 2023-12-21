@@ -21,6 +21,7 @@ export default function SignUp() {
       setSignupForm({...signupForm, birth_date: signupForm.birth_date + "T00:00:00"})
     }
   }, [signupForm])
+  
   const router = useRouter()
 
   const SignUp = () => {

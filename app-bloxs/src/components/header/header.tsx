@@ -1,8 +1,9 @@
 import styles from './styles.module.css'
-import Image from 'next/image'
+
 import { Button } from '@mui/material';
 import { useRouter } from "next/navigation"
 import { useState } from 'react'
+
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import InfoIcon from '@mui/icons-material/Info';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -11,6 +12,7 @@ import SouthWestIcon from '@mui/icons-material/SouthWest';
 import NorthEastIcon from '@mui/icons-material/NorthEast';
 import PixIcon from '@mui/icons-material/Pix';
 import MenuIcon from '@mui/icons-material/Menu';
+import Chip from '@mui/material/Chip';
 
 export default function Header(props: any){
     
@@ -36,6 +38,7 @@ export default function Header(props: any){
                 <Button onClick={() => {redirect(0)}} className={props.tabIndex == '0'? styles.selected : styles.notSelected}> 
                     <InfoIcon />
                     {collapsed ? '' : 'Quem Somos'}
+                    <Chip label="beta" variant="outlined" className={styles.chip}></Chip>
                 </Button>
             </div>
             <div className={styles.tabContainer}>
