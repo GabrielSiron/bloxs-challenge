@@ -46,63 +46,65 @@ export default function SignUp() {
       <title>Desafio Bloxs | Cadastro</title>
       <div className={styles.page}>
         <div className={styles.form}>
-          <h1 className={styles.formTitle}>Um banco digital <br /> com impacto Real.</h1>
-          <br />
           <div>
-          <TextField
-            type="text"
-            placeholder="nome"
-            className={styles.formInput}
-            required
-            onChange={(e: any) => {
-              setSignupForm({...signupForm, name: e.currentTarget.value})
-            }}
-          />
-          <TextField
-            type="text"
-            placeholder="cpf"
-            className={styles.formInput}
-            required
-            onChange={(e: any) => {
-              e.currentTarget.value = formatDocumentNumber(e.currentTarget.value);
-              setSignupForm({...signupForm, document_number: e.currentTarget.value});
-              
-            }}
-          />
-          <TextField
-            type="date"
-            placeholder="birth date"
-            className={styles.formInput}
-            required
-            onChange={(e: any) => {
-              setSignupForm({...signupForm, birth_date: e.currentTarget.value})
-            }}
-          />
-          <TextField
-            type="text"
-            placeholder="e-mail"
-            inputProps={{ pattern: "/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/" }}  
-            className={styles.formInput}
-            required
-            onChange={(e: any) => {
-              setSignupForm({...signupForm, email: e.currentTarget.value})
-            }}
-          />
-          <TextField
-            type="password"
-            placeholder="senha"
-            className={styles.formInput}
-            required
-            onChange={(e: any) => {
-              setSignupForm({...signupForm, password: e.currentTarget.value})
-            }}
-          />
-          </div>
-          <div className={styles.containerBtn}>
-            <Button className={styles.button} variant="contained" onClick={SignUp}>
-              Criar conta
-            </Button>
-            <Button className={styles.button} onClick={() => router.push('/login')}>Já possuo conta</Button>
+            <h1 className={styles.formTitle}>Um banco digital <br /> com impacto Real.</h1>
+            
+            <div>
+            <TextField
+              type="text"
+              placeholder="nome"
+              className={styles.formInput}
+              required
+              onChange={(e: any) => {
+                setSignupForm({...signupForm, name: e.currentTarget.value})
+              }}
+            />
+            <TextField
+              type="text"
+              placeholder="cpf"
+              className={styles.formInput}
+              required
+              onChange={(e: any) => {
+                e.currentTarget.value = formatDocumentNumber(e.currentTarget.value);
+                setSignupForm({...signupForm, document_number: e.currentTarget.value});
+                
+              }}
+            />
+            <TextField
+              type="date"
+              placeholder="birth date"
+              className={styles.formInput}
+              required
+              onChange={(e: any) => {
+                setSignupForm({...signupForm, birth_date: e.currentTarget.value})
+              }}
+            />
+            <TextField
+              type="text"
+              placeholder="e-mail"
+              inputProps={{ pattern: "/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/" }}  
+              className={styles.formInput}
+              required
+              onChange={(e: any) => {
+                setSignupForm({...signupForm, email: e.currentTarget.value})
+              }}
+            />
+            <TextField
+              type="password"
+              placeholder="senha"
+              className={styles.formInput}
+              required
+              onChange={(e: any) => {
+                setSignupForm({...signupForm, password: e.currentTarget.value})
+              }}
+            />
+            </div>
+            <div className={styles.containerBtn}>
+              <Button className={styles.button} variant="contained" onClick={SignUp}>
+                Criar conta
+              </Button>
+              <Button className={styles.button} onClick={() => router.push('/login')}>Já possuo conta</Button>
+            </div>
           </div>
         </div>
         <div className={styles.callToAction}>

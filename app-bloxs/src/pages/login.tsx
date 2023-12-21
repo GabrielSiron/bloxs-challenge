@@ -21,7 +21,7 @@ export default function Login() {
   const Login = () => {
     loginRequest(form)
       .then(async (response) => {
-        await localStorage.setItem("token", response?.data?.token)
+        localStorage.setItem("token", response?.data?.token)
         router.push("/transactions")
       })
       .catch((err) => {
@@ -37,35 +37,37 @@ export default function Login() {
           <Image src={CallToAction} alt='call' className={styles.bankIcon} width={600} height={600}/>
         </div>
         <div className={styles.form}>
-          <h1 className={styles.formTitle}>Acesse todos os recursos da nossa plataforma</h1>
-          <TextField 
-            type="text"
-            placeholder="email@gmail.com"
-            label="Email"
-            variant="outlined"
-            className={styles.formInput}
-            onChange={(e: any) => {
-              form.email = e.currentTarget.value
-            }}/>
+          <div>
+            <h1 className={styles.formTitle}>Acesse todos os recursos da nossa plataforma</h1>
+            <TextField 
+              type="text"
+              placeholder="email@gmail.com"
+              label="Email"
+              variant="outlined"
+              className={styles.formInput}
+              onChange={(e: any) => {
+                form.email = e.currentTarget.value
+              }}/>
 
-          <TextField 
-            type={showPassword ? 'text' : 'password'}
-            placeholder="********"
-            label="Password"
-            variant="outlined"
-            className={styles.formInput}
-            onChange={(e: any) => {
-              form.password = e.currentTarget.value
-            }}
-          />
-          
-          <div className={styles.checkoutContainer}>
-            <FormControlLabel className={styles.checkbox} control={<Checkbox onClick={() => {setShowPassword(!showPassword)}}/>} label="Mostrar senha" />
-          </div>
+            <TextField 
+              type={showPassword ? 'text' : 'password'}
+              placeholder="********"
+              label="Password"
+              variant="outlined"
+              className={styles.formInput}
+              onChange={(e: any) => {
+                form.password = e.currentTarget.value
+              }}
+            />
+            
+            <div className={styles.checkoutContainer}>
+              <FormControlLabel className={styles.checkbox} control={<Checkbox onClick={() => {setShowPassword(!showPassword)}}/>} label="Mostrar senha" />
+            </div>
 
-          <div className={styles.containerBtn}>
-            <Button className={styles.button} variant="contained" onClick={Login}>Faça Login</Button>
-            <Button className={styles.button} onClick={() => router.push('/signup')}>Cadastrar-se</Button>
+            <div className={styles.containerBtn}>
+              <Button className={styles.button} variant="contained" onClick={Login}>Faça Login</Button>
+              <Button className={styles.button} onClick={() => router.push('/signup')}>Cadastrar-se</Button>
+            </div>
           </div>
         </div>
       </div>
