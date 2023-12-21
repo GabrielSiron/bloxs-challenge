@@ -44,3 +44,7 @@ O Pix exige que se use o cpf de outro usuário como chave (assim como funciona n
 Existe uma modalidade de bloqueio automático. Para testar essa feature, tente realizar uma transação com 70% do limite diário. 
 
 Exemplo: limite diário de R$500,00, o valor da transação deve ser de, pelo menos, R$350,01.
+
+## Detalhes
+
+Por conta da implementação interna da imagem usada para rodar o MySQL, o terminal fica um pouco bagunçado na primeira execução. Mas todos os serviços estão configurados para executar novamente em caso de falha, então, em algum momento, o MySQL fica disponível de novo e a API consegue conectar nele. Mas isso só ocorre na primeira execução. Uma vez que o serviço esteja devidamente configurado, isso não ocorrerá mais.
