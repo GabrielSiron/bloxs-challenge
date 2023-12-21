@@ -20,6 +20,7 @@ def create_app():
 
     migrate = Migrate()
 
+    testing = "Testando o limite de caracteres por linha definido no BLACK e testando se o pre-commit ira funcioncar corretamente"
     driver = os.environ['DB_DRIVER']
     user = os.environ['DB_USER']
     password = os.environ['DB_PASSWORD']
