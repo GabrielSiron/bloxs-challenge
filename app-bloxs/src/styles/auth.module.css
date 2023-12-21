@@ -1,11 +1,11 @@
 .page {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     align-items: center;
     justify-content: center;
     width: 100vw;
     height: 100vh;
-}
+}   
 
 .callToAction {
     display: flex;
@@ -13,6 +13,7 @@
     align-items: center;
     width: 100%;
     height: 100%;
+    display: none;
 }
 
 .bankIcon {
@@ -21,8 +22,12 @@
 }
 
 .form {
-    margin-left: 15%;
-    width: 70%;
+    order: 0;
+    margin-left: 5%;
+    width: 90%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
     justify-content: center;
     text-align: center;
     background-color: var(--neutral-background-gray);
@@ -30,7 +35,7 @@
 }
 
 .formTitle {
-    font-size: 40px;
+    font-size: 2rem;
     font-weight: 300;
     font-family: 'Poppins', sans-serif;
     color: #3498db !important;
@@ -54,7 +59,7 @@
 .button {
     width: 80%;
     text-transform: none;
-    font-size: 16px;
+    font-size: 1rem;
     font-family: 'Poppins', sans-serif;
     cursor: pointer;
     margin-top: 10px;
@@ -67,4 +72,31 @@
 
 .checkbox {
     float: left;
+}
+
+@media (min-width: 900px) {
+    .page {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        justify-content: center;
+        width: 100vw;
+        height: 100vh;
+    }   
+
+    .callToAction {
+        display: contents;
+    }
+
+    .form {
+        margin-left: 15%;
+        width: 70%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        background-color: var(--neutral-background-gray);
+        border-radius: 15px;
+    }
+
 }
