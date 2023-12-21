@@ -18,8 +18,7 @@ export default function Withdrawal() {
 
   const router = useRouter()
   const [form, setForm] = useState({
-    value: '',
-    origin_account_id: 2
+    value: 0.0
   })
 
   const [inputError, setInputError] = useState(false)
@@ -38,7 +37,7 @@ export default function Withdrawal() {
     })
 
   useEffect(() => {
-      checkInputLimit(form.value)
+      checkInputLimit(form.value);
   }, [form])
 
   const checkInputLimit = (value: string) => {
@@ -55,14 +54,14 @@ export default function Withdrawal() {
     }
   }
 
-  const updateValue = (value: string) => {
-    setForm({...form, value: value})
-    if (value == "") setSendButton(true)
-    else setSendButton(false)
+  const isNumeric = (value: number) => {
+    if (typeof value != "string") return false // we only process strings!  
+    return !isNaN(value) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+           !isNaN(parseFloat(value)) // ...and ensure strings of whitespace fail
   }
 
   const WithdrawalMoney = () => {
-    makeWithdrawal({...form, value: form.value.replace(',', '.')})
+    makeWithdrawal(form)
       .then((data) => {
         router.push('/transactions')
       })
@@ -98,7 +97,9 @@ export default function Withdrawal() {
                 ),
               }}
               onChange={(e: any) => {
-                updateValue(e.target.value)
+                if(isNumeric(e.target.value)) setSendButton(false);
+                else setSendButton(true);
+                setForm({value: parseFloat(e.target.value)})
               }}
             />
             <Button

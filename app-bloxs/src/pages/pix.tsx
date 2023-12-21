@@ -20,7 +20,6 @@ export default function Pix() {
 
   const [transferenceForm, setTransferenceForm] = useState({
     value: '',
-    origin_account_id: undefined,
     pix_key: ''
   })
 
@@ -43,7 +42,6 @@ export default function Pix() {
     getAccountInfo()
     .then((response: any) => {
         setAmount(response?.data?.amount)
-        setTransferenceForm({...transferenceForm, origin_account_id: response?.data?.id})
     })
     .catch((error) => {
 

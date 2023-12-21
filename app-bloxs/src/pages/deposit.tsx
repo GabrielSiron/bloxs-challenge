@@ -13,28 +13,25 @@ import { sendDeposit } from "../api/transaction"
 import Header from '../components/header/header'
 
 export default function Deposit() {
-  var form = {
-    value: "",
-    destination_account_id: 2
-  }
 
   const router = useRouter()
   const [apiMessageError, setApiMessageError] = useState('')
   const [open, setOpen] = useState(false);
   const [disableSendButton, setSendButton] = useState(true)
-  const CheckValue = (value: string) => {
-    form.value = value
-    if (value == "") setSendButton(true)
-    else setSendButton(false)
-  }
+
+  const [depositForm, setDepositForm] = useState({
+    value: 0.0
+  })
+
+  useEffect(() => {
+    if(depositForm == '') setSendButton(true);
+    setSendButton(false)
+
+  }, depositForm)
 
   const DepositMoney = () => {
-    var deposit_form = {
-      value: parseFloat(form.value.replace(',', '.')), 
-      destination_account_id: form.destination_account_id
-    }
 
-    sendDeposit(deposit_form)
+    sendDeposit(depositForm)
       
       .then((data) => {
         router.push('/transactions')
@@ -64,7 +61,7 @@ export default function Deposit() {
                 ),
               }}
               onChange={(e: any) => {
-                CheckValue(e.target.value)
+                setDepositForm({value: parseFloat(e.target.value)})
               }}
             />
             <Button
