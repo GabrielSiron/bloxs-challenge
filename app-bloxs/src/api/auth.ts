@@ -17,7 +17,7 @@ export const loginRequest = (form: any) => {
 
 export const signUpRequest = (form: any) => {
     return new Promise((resolve, reject) => {
-        basePostRequest('/account', form)
+        basePostRequest('/signup', form)
             .then((response) => {
                 resolve(response)
             })

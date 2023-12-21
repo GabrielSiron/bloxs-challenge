@@ -19,26 +19,26 @@ def seed_database():
         diamond_account_type.daily_limit = diamond_limit
 
         first_person = Person()
-        first_person.name = 'Gabriel'
+        first_person.name = 'Gabriel Menezes'
         first_person.birth_date = '2001-06-19'
         first_person.birth_date = '2001-06-19'
         first_person.document_number = '99999999999'
 
         first_account = Account()
-        first_account.email = 'test@bloxs.com'
+        first_account.email = 'gabriel@bloxs.com'
         first_account.password = 'password'
         first_account.amount = 10000.00
         first_account.person_relation = first_person
         first_account.account_type_relation = gold_account_type
 
         second_person = Person()
-        second_person.name = 'Siron'
+        second_person.name = 'Lucas Ayres'
         second_person.birth_date = '2001-06-19'
         second_person.birth_date = '2001-06-19'
         second_person.document_number = '88888888888'
 
         second_account = Account()
-        second_account.email = 'gabriel@bloxs.com'
+        second_account.email = 'lucas@bloxs.com'
         second_account.password = 'password'
         second_account.amount = 10000.00
         second_account.person_relation = second_person

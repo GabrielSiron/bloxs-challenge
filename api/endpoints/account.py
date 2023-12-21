@@ -24,7 +24,7 @@ def create_account(json_data):
     account = Account()
 
     person.name = json_data['name']
-    person.document_number = json_data['document_number']
+    person.document_number = clean_document_number(json_data['document_number'])
     person.birth_date = json_data['birth_date']
 
     account.email = json_data['email']
@@ -35,12 +35,23 @@ def create_account(json_data):
     try:
         db.session.add(account)
         db.session.commit()
-    except:
+    except Exception as e:
         db.session.rollback()
+        abort(401, str(e))
     finally:
         db.session.close()
 
-    return {'message': 'Account created successfully'}
+    query = select(Account.id) \
+        .filter_by(email=json_data['email'])
+    
+    id = db.session.execute(query).scalar_one()
+    
+    token = encode_auth_token(id)
+    
+    return {
+        'message': 'Logged in',
+        'token': token
+    }
 
 @account_routes.put('/change_password')
 @account_routes.input(ChangePasswordValidator)

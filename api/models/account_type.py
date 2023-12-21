@@ -9,7 +9,6 @@ class AccountType(db.Model):
     title = db.Column(db.String(20), nullable=False)
     description = db.Column(db.Text, nullable=False)
     daily_limit = db.Column(db.Numeric, nullable=False)
-    accounts = db.relationship('Account', backref='account_type')
 
     def __repr__(self):
         return f'<AccountType {self.title}>'

@@ -3,20 +3,28 @@ import { signUpRequest } from "@/api/auth"
 import { useRouter } from "next/navigation"
 import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
+import { useState, useEffect } from "react";
 import Image from "next/image"
 import CallToAction from '../assets/img/signup-image.jpg'
 
 export default function SignUp() {
-  var form = {
-    name: "",
-    email: "",
-    password: "",
-    document_number: "",
-    birth_date: "",
-  }
+  const [signupForm, setSignupForm] = useState({
+    name: '',
+    email: '',
+    password: '',
+    birth_date: '',
+    document_number: ''
+  })
+  
+  useEffect(() => {
+    if(signupForm.birth_date.length == 10){
+      setSignupForm({...signupForm, birth_date: signupForm.birth_date + "T00:00:00"})
+    }
+  }, [signupForm])
   const router = useRouter()
+
   const SignUp = () => {
-    signUpRequest(form)
+    signUpRequest(signupForm)
     .then(async (response) => {
       await localStorage.setItem("token", response?.data?.token)
       router.push("/transactions")
@@ -27,9 +35,9 @@ export default function SignUp() {
   }
 
   const formatDocumentNumber = (value: string) => {
-    if(value.length == 3 && form.document_number.length == 2) return value + '.'
-    if(value.length == 7 && form.document_number.length == 6) return value + '.'
-    if(value.length == 11 && form.document_number.length == 10) return value + '-'
+    if(value.length == 3 && signupForm.document_number.length == 2) return value + '.'
+    if(value.length == 7 && signupForm.document_number.length == 6) return value + '.'
+    if(value.length == 11 && signupForm.document_number.length == 10) return value + '-'
     return value
   }
 
@@ -45,24 +53,29 @@ export default function SignUp() {
             type="text"
             placeholder="nome"
             className={styles.formInput}
+            required
             onChange={(e: any) => {
-              form.name = e.currentTarget.value
+              setSignupForm({...signupForm, name: e.currentTarget.value})
             }}
           />
           <TextField
             type="text"
             placeholder="cpf"
             className={styles.formInput}
+            required
             onChange={(e: any) => {
-              form.document_number = e.currentTarget.value = formatDocumentNumber(e.currentTarget.value)
+              e.currentTarget.value = formatDocumentNumber(e.currentTarget.value);
+              setSignupForm({...signupForm, document_number: e.currentTarget.value});
+              
             }}
           />
           <TextField
             type="date"
             placeholder="birth date"
             className={styles.formInput}
+            required
             onChange={(e: any) => {
-              form.birth_date = e.currentTarget.value
+              setSignupForm({...signupForm, birth_date: e.currentTarget.value})
             }}
           />
           <TextField
@@ -70,16 +83,18 @@ export default function SignUp() {
             placeholder="e-mail"
             inputProps={{ pattern: "/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/" }}  
             className={styles.formInput}
+            required
             onChange={(e: any) => {
-              form.email = e.currentTarget.value
+              setSignupForm({...signupForm, email: e.currentTarget.value})
             }}
           />
           <TextField
             type="password"
             placeholder="senha"
             className={styles.formInput}
+            required
             onChange={(e: any) => {
-              form.password = e.currentTarget.value
+              setSignupForm({...signupForm, password: e.currentTarget.value})
             }}
           />
           </div>
