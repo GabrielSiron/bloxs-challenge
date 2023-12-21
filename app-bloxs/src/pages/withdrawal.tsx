@@ -1,4 +1,4 @@
-import styles from "../styles/withdrawal.module.css"
+import styles from "../styles/transfer_styles.module.css"
 import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
 
@@ -28,22 +28,22 @@ export default function Withdrawal() {
   const [disableSendButton, setSendButton] = useState(true)
   const [amount, setAmount] = useState(0.00)
 
-  getAccountInfo()
-    .then((response: any) => {
-      setAmount(response?.data?.amount)
-    })
-    .catch((error) => {
+  useEffect(() => {
+    getAccountInfo()
+      .then((response: any) => {
+        setAmount(response?.data?.amount)
+      })
+      .catch((error) => {
 
-    })
+      })
+  }, [])
 
   useEffect(() => {
       checkInputLimit(form.value);
   }, [form])
 
-  const checkInputLimit = (value: string) => {
-    console.log(parseFloat(form.value), amount);
-    
-    if(parseFloat(form.value) > amount){
+  const checkInputLimit = (value: number) => {
+    if(form.value > amount){
       setInputError(true)
       setInputMessageError('Saldo Insuficiente.')
       setSendButton(true)
@@ -55,9 +55,8 @@ export default function Withdrawal() {
   }
 
   const isNumeric = (value: number) => {
-    if (typeof value != "string") return false // we only process strings!  
-    return !isNaN(value) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
-           !isNaN(parseFloat(value)) // ...and ensure strings of whitespace fail
+    if (typeof value != "string") return false
+    return !isNaN(value) && !isNaN(parseFloat(value)) 
   }
 
   const WithdrawalMoney = () => {

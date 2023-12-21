@@ -1,24 +1,34 @@
 @import url('../styles/about.module.css');
 
+
 .page {
     display: inline-block;
     justify-content: start;
-    padding-top: 64px;
-    padding-left: 64px;
+    padding-left: 10px;
     width: 100vw;
     height: 100vh;
 }
 
+
 .helloText {
     font-size: 2.5rem;
     padding-left: 40px;
+    padding-right: 10px;
     font-family: 'Poppins', sans-serif;
     color: #3dadea;
     margin-bottom: 0;
 }
 
+.amount {
+    font-size: 2.2rem;
+    padding-left: 40px;
+    font-family: 'Poppins', sans-serif;
+    color: #3dadea;
+    margin-top: 12px;
+}
+
 .activeAccount {
-    color: #2ecc71;
+    color: #3498db;
 }
 
 .desactiveAccount {
@@ -42,17 +52,24 @@
 
 .dataContainer {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
 }
 
 .callToAction {
     width: 100%;
     display: flex;
+    order: 1;
     align-items: end;
-    justify-content: end;
+    justify-content: start;
+    padding-right: 12px;
 }
 
-.personalData {
+.listItem {
+    padding: 0;
+}
+
+.personalDataContainer {
+    order: 0;
     width: 100%;
     display: flex;
     align-items: center;
@@ -60,11 +77,30 @@
     justify-content: start;
 }
 
+.personalData {
+    padding-left: 40px;
+}
+
 .sectionTitle {
     padding-top: 40px;
     font-size: 24px;
     margin: 0;
     font-family: 'Poppins', sans-serif;
+}
+
+.btnContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.btnContainer {
+    .desactiveButton {
+        text-transform: none;
+        color: #e74c3c;
+        border-color: #e74c3c;
+    }
 }
 
 .info {
@@ -76,11 +112,37 @@
 }
 
 .bankIcon {
-    width: 70% !important;
+    width: 90% !important;
     height: auto !important;
 }
 
-.attr {
-    line-height: 0px;
-    color: #3dadea;
+@media (min-width: 768px) {
+    .page {
+        padding-left: 40px;
+    }
+
+    .personalData {
+        padding-left: 0px;
+    }
+    
+    .dataContainer {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .callToAction {
+        position: relative;
+        justify-content: end;
+        order: 0;
+    }
+    
+    .personalDataContainer {
+        order: 1;
+    }
+    
+    
+    .bankIcon {
+        width: 70% !important;
+        height: auto !important;
+    }
 }

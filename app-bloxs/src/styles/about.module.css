@@ -6,7 +6,6 @@
 }
 
 .content {
-    padding: 100px 0px;
     display: flex;
     flex-direction: column;
     width: 70%;

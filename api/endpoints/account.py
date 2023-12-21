@@ -110,7 +110,9 @@ def get_account_info():
             'email': account.email,
             'name': account.person_relation.name,
             'document_number': account.person_relation.document_number,
-            'is_active': account.is_active
+            'is_active': account.is_active,
+            'account_type': account.account_type_relation.title,
+            'account_daily_limit': account.account_type_relation.daily_limit
         }
     
     abort(404, "User was not found")
@@ -129,6 +131,21 @@ def unblock_account():
     finally:
         db.session.close()
     return {'message': 'Conta ativa'}
+
+@account_routes.put('/block')
+def block_account():
+    query = select(Account) \
+        .filter_by(id=request.args['account_id'])
+    
+    account = db.session.execute(query).scalar_one()
+    try:
+        account.is_active = False
+        db.session.commit()
+    except:
+        db.session.rollback()
+    finally:
+        db.session.close()
+    return {'message': 'Conta desativada'}
 
 def find_user_by_pix_key():
     document_number = clean_document_number(request.json['pix_key'])

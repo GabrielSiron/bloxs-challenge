@@ -1,18 +1,38 @@
 .header {
     position: fixed;
     display: flex;
+    flex-direction: column;
+    text-wrap: wrap;
     z-index: 5;
-    align-items: center;
     top: 0px;
     left: 0px;
-    width: 100%;
-    gap: 30px;
-    padding: 0px 20px;
-    height: 64px;
+    background-color: #fff;
+}
+
+.menuToggle {
+    justify-content: left;
+    gap: 10px;
+    text-transform: none;
+    min-width: 100%;
+    font-weight: 500;
+    margin: 4px;
+    font-size: 14px;
+    color: #333333;
+}
+
+.headerNotCollapsed {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    text-wrap: wrap;
+    z-index: 5;
+    top: 0px;
+    left: 0px;
+    height: 100vh;
+    width: 80%;
     background-color: #fff;
     box-shadow: 0px 10px 13px -9px rgba(51,51,51,0.57);
 }
-
 .name, .accountType, .amount {
     font-family: "Roboto","Helvetica","Arial",sans-serif;
 } 
@@ -22,21 +42,38 @@
     cursor: pointer;
 }
 
-.notSelected {
-    text-transform: none;
-    font-weight: 500;
-    margin: 4px;
-    font-size: 14px;
-    color: #333333;
+.header {
+    .selected, .notSelected, .logout {
+        display: none;
+    }
 }
 
-.selected {
-    text-transform: none;
-    position: relative;
-    font-weight: 500;
-    margin: 4px;
-    font-size: 14px;
-    color: #5dade3;
+.headerNotCollapsed {
+    
+    .notSelected {
+        justify-content: left;
+        gap: 10px;
+        text-transform: none;
+        min-width: 100%;
+        font-weight: 500;
+        margin: 4px;
+        font-size: 14px;
+        color: #333333;
+    }
+    
+    
+    .selected {
+        justify-content: left;
+        gap: 10px;
+        text-transform: none;
+        min-width: 100%;
+        position: relative;
+        font-weight: 500;
+        margin: 4px;
+        font-size: 14px;
+        color: #5dade3;
+    }
+    
 }
 
 .circle {
@@ -54,4 +91,123 @@
 
 .enterpriseName {
     margin: 0;
+}
+
+.logoutContainer {
+    position: absolute;
+    bottom: 20px;
+    cursor: pointer;
+}
+
+.logout {
+    justify-content: left;
+    gap: 10px;
+    text-transform: none;
+    position: relative;
+    font-weight: 500;
+    margin: 4px;
+    font-size: 14px;
+    color: #e74c3c;
+}
+
+@media (min-width: 768px) {
+    .header {
+        position: fixed;
+        display: flex;
+        flex-direction: column;
+        text-wrap: wrap;
+        z-index: 5;
+        top: 0px;
+        left: 0px;
+        height: 100vh;
+        width: 50px;
+        background-color: #fff;
+        box-shadow: 0px 10px 13px -9px rgba(51,51,51,0.57);
+    }
+
+    .headerNotCollapsed {
+        position: fixed;
+        display: flex;
+        flex-direction: column;
+        text-wrap: wrap;
+        z-index: 5;
+        top: 0px;
+        left: 0px;
+        height: 100vh;
+        width: 200px;
+        background-color: #fff;
+        box-shadow: 0px 10px 13px -9px rgba(51,51,51,0.57);
+    }
+    .name, .accountType, .amount {
+        font-family: "Roboto","Helvetica","Arial",sans-serif;
+    } 
+    
+    .tabContainer {
+        position: relative;
+        cursor: pointer;
+    }
+    
+    .header {
+        .notSelected, .selected, .logout {
+            display: flex;
+        }
+    }
+
+    .notSelected {
+        justify-content: left;
+        gap: 10px;
+        text-transform: none;
+        min-width: 100%;
+        font-weight: 500;
+        margin: 4px;
+        font-size: 14px;
+        color: #333333;
+    }
+    
+    
+    .selected {
+        justify-content: left;
+        gap: 10px;
+        text-transform: none;
+        min-width: 100%;
+        position: relative;
+        font-weight: 500;
+        margin: 4px;
+        font-size: 14px;
+        color: #5dade3;
+    }
+    
+    .circle {
+        position: absolute;
+        left: 0;
+        bottom: -2px;
+        right: 0;
+        margin: 0 auto;
+        margin-top: 4px;
+        width: 10px;
+        height: 10px;
+        background-color: #5dade3;
+        border-radius: 50%;
+    }
+    
+    .enterpriseName {
+        margin: 0;
+    }
+    
+    .logoutContainer {
+        position: absolute;
+        bottom: 20px;
+        cursor: pointer;
+    }
+    
+    .logout {
+        justify-content: left;
+        gap: 10px;
+        text-transform: none;
+        position: relative;
+        font-weight: 500;
+        margin: 4px;
+        font-size: 14px;
+        color: #e74c3c;
+    }
 }

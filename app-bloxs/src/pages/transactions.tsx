@@ -32,7 +32,14 @@ export default function Transactions() {
   const [transactions, setTransactions] = useState([])
 
   useEffect(() => {
-    listTransactions(page, per_page)
+    
+    // O token de autenticação é adicionado ao localStorage, mas o router muda de página
+    // tão rapidamente que o request não consegue adicioná-lo na primeira requisição pós login/cadastro.
+    // A solução temporária é adicionar um timeout de 100ms para que a operação de inserir 
+    // o token tenha sido finalizada. 
+
+    setTimeout(() => {
+      listTransactions(page, per_page)
       .then((response) => {
         setTransactions(response?.data?.transactions);
         setNext(response?.data?.has_next)
@@ -44,6 +51,7 @@ export default function Transactions() {
       .catch((error) => {
 
       })
+    }, 100)
   }, [page])
 
   return (
@@ -54,7 +62,7 @@ export default function Transactions() {
         {
           transactions.length > 0 && 
             <div className={styles.card}>
-            <List sx={{ width: '90%'}}>
+            <List sx={{ width: '100%'}}>
               {
                 transactions.map((transaction: any) => (
                     <ListItem  key={transaction.id} secondaryAction={<p>R$ {transaction.value}</p>}>
@@ -62,11 +70,11 @@ export default function Transactions() {
                           transaction.origin_account_id && transaction.destination_account_id? 
                           <>
                             <ListItemAvatar>
-                              <Avatar>
-                                <PixIcon sx={{  }}/>
+                              <Avatar className={styles.avatar}>
+                                <PixIcon />
                               </Avatar>
                             </ListItemAvatar>
-                            <ListItemText primary={'Transferencia para ' + transaction.destination_account_name} secondary={
+                            <ListItemText primary={'Pix para ' + transaction.destination_account_name} secondary={
                               `${(new Date(transaction.date)).toLocaleString()}`
                             } />
                           </>
@@ -74,8 +82,8 @@ export default function Transactions() {
                           (
                             <>
                               <ListItemAvatar>
-                                <Avatar>
-                                  <NorthEastIcon sx={{ color: red[200] }}/>
+                                <Avatar className={styles.avatar}>
+                                  <NorthEastIcon sx={{ color: red[200], backgroundColor: 'transparent' }}/>
                                 </Avatar>
                               </ListItemAvatar>
                               <ListItemText primary="Saque" secondary={
@@ -86,8 +94,8 @@ export default function Transactions() {
                           : 
                           <>
                               <ListItemAvatar>
-                                <Avatar>
-                                  <SouthWestIcon sx={{ color: green[300] }}/>
+                                <Avatar className={styles.avatar}>
+                                  <SouthWestIcon sx={{ color: green[900] }}/>
                                 </Avatar>
                               </ListItemAvatar>
                               <ListItemText primary="Deposito" secondary={
