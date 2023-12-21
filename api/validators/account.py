@@ -10,14 +10,17 @@ class CreateAccountValidator(Schema):
     document_number = String(required=True, validate=Length(14, 14))
     birth_date = DateTime(required=True)
 
+
 class ChangePasswordValidator(Schema):
     email = String(required=True, validate=Length(0, 50))
     current_password = String(required=True, validate=Length(8, 50))
     new_password = String(required=True, validate=Length(8, 50))
 
+
 class LoginValidator(Schema):
     email = String(required=True, validate=Length(10, 50))
     password = String(required=True, validate=Length(8, 50))
+
 
 class GetAccountInfo(Schema):
     email = String(required=True, validate=Length(10, 50))
