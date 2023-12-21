@@ -2,56 +2,77 @@ import styles from './styles.module.css'
 import Image from 'next/image'
 import { Button } from '@mui/material';
 import { useRouter } from "next/navigation"
-import BloxsLogo from '../../assets/img/bloxs-logo.png'
+import { useState } from 'react'
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import InfoIcon from '@mui/icons-material/Info';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import SouthWestIcon from '@mui/icons-material/SouthWest';
+import NorthEastIcon from '@mui/icons-material/NorthEast';
+import PixIcon from '@mui/icons-material/Pix';
+import MenuIcon from '@mui/icons-material/Menu';
 
 export default function Header(props: any){
     
     const tabs = ['/about', '/account', '/transactions', 'deposit', 'withdrawal', '/pix']
+    const [collapsed, setCollapsed] = useState(true)
     const router = useRouter()
+    
     const redirect = (index: number) => {
         router.push(tabs[index])
     }
+
+    const logout = () => {
+        localStorage.removeItem('token');
+        router.push('/login')
+    }
     
     return (
-        <div className={styles.header}>
-            <div>
-                <h2 className={styles.enterpriseName}>Desafio  <Image src={BloxsLogo} alt='logo' width='50'></Image></h2>
+        <div className={collapsed? styles.header : styles.headerNotCollapsed}>
+            <Button className={styles.menuToggle} onClick={() => setCollapsed(!collapsed)}>
+                <MenuIcon />
+            </Button>
+            <div className={styles.tabContainer}>
+                <Button onClick={() => {redirect(0)}} className={props.tabIndex == '0'? styles.selected : styles.notSelected}> 
+                    <InfoIcon />
+                    {collapsed ? '' : 'Quem Somos'}
+                </Button>
             </div>
             <div className={styles.tabContainer}>
-                <Button onClick={() => {redirect(0)}} className={props.tabIndex == '0'? styles.selected : styles.notSelected}>Quem Somos</Button>
-                {/* {
-                    props.tabIndex == '0' && <div className={styles.circle}></div>
-                } */}
+                <Button onClick={() => {redirect(1)}} className={props.tabIndex == '1'? styles.selected : styles.notSelected}> 
+                    <AccountCircleIcon />
+                    {collapsed ? '' : 'Minha Conta'}
+                </Button>
             </div>
             <div className={styles.tabContainer}>
-                <Button onClick={() => {redirect(1)}} className={props.tabIndex == '1'? styles.selected : styles.notSelected}>Minha Conta</Button>
-                {/* {
-                    props.tabIndex == '1' && <div className={styles.circle}></div>
-                } */}
+                <Button onClick={() => {redirect(2)}} className={props.tabIndex == '2'? styles.selected : styles.notSelected}> 
+                    <ReceiptLongIcon />
+                    {collapsed ? '' : 'Transações'}
+                </Button>
             </div>
             <div className={styles.tabContainer}>
-                <Button onClick={() => {redirect(2)}} className={props.tabIndex == '2'? styles.selected : styles.notSelected}>Transações</Button>
-                {/* {
-                    props.tabIndex == '2' && <div className={styles.circle}></div>
-                } */}
+                <Button onClick={() => {redirect(3)}} className={props.tabIndex == '3'? styles.selected : styles.notSelected}> 
+                    <SouthWestIcon />
+                    {collapsed ? '' : 'Depósito'}
+                </Button>
             </div>
             <div className={styles.tabContainer}>
-                <Button onClick={() => {redirect(3)}} className={props.tabIndex == '3'? styles.selected : styles.notSelected}>Depósito</Button>
-                {/* {
-                    props.tabIndex == '3' && <div className={styles.circle}></div>
-                } */}
+                <Button onClick={() => {redirect(4)}} className={props.tabIndex == '4'? styles.selected : styles.notSelected}> 
+                    <NorthEastIcon />
+                    {collapsed ? '' : 'Saque'}
+                </Button>
             </div>
             <div className={styles.tabContainer}>
-                <Button onClick={() => {redirect(4)}} className={props.tabIndex == '4'? styles.selected : styles.notSelected}>Saque</Button>
-                {/* {
-                    props.tabIndex == '4' && <div className={styles.circle}></div>
-                } */}
+                <Button onClick={() => {redirect(5)}} className={props.tabIndex == '5'? styles.selected : styles.notSelected}> 
+                    <PixIcon />
+                    {collapsed ? '' : 'Pix'}
+                </Button>
             </div>
-            <div className={styles.tabContainer}>
-                <Button onClick={() => {redirect(5)}} className={props.tabIndex == '5'? styles.selected : styles.notSelected}>Pix</Button>
-                {/* {
-                    props.tabIndex == '5' && <div className={styles.circle}></div>
-                } */}
+            <div className={styles.logoutContainer}>
+                <Button onClick={() => {logout()}} className={styles.logout}> 
+                    <ExitToAppIcon />
+                    {collapsed ? '' : 'Sair'}
+                </Button>
             </div>
         </div>
         )
