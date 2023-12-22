@@ -46,13 +46,13 @@ def create_account(json_data):
 
     token = encode_auth_token(id)
 
-    return {"message": "Logged in", "token": token}
+    return {"message": "Login realizado com sucesso", "token": token}
 
 
 @account_routes.put("/change_password")
 @account_routes.input(ChangePasswordValidator)
 def change_password(json_data):
-    query = select(Account).filter_by(email=json_data["email"])
+    query = select(Account).filter_by(id=request.args["account_id"])
     account = db.session.execute(query).scalar_one()
 
     if account and account.password == json_data["current_password"]:
@@ -66,7 +66,7 @@ def change_password(json_data):
 
         return {"message": "Sucessfully changed password"}
 
-    abort(400, "Unable to change password")
+    abort(400, "Senhas não coincidem")
 
 
 @account_routes.post("/login")
@@ -78,13 +78,12 @@ def login(json_data):
         .filter_by(password=json_data["password"])
     )
 
-    account = db.session.execute(query).scalar_one()
-
-    if account:
+    try:
+        account = db.session.execute(query).scalar_one()
         token = encode_auth_token(account.id)
         return {"message": "Logged in", "token": token}
-
-    abort(400, "Unable to login")
+    except NoResultFound:
+        abort(400, "Email ou senha invalidos")
 
 
 @account_routes.get("/account")
@@ -108,7 +107,7 @@ def get_account_info():
             "account_daily_limit": account.account_type_relation.daily_limit,
         }
 
-    abort(404, "User was not found")
+    abort(404, "Usuário não foi encontrado")
 
 
 @account_routes.put("/unblock")

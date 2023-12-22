@@ -34,10 +34,10 @@ def make_transfer(json_data):
     origin_account = db.session.execute(query).scalar_one()
 
     if not origin_account:
-        abort(404, "Origin user not found")
+        abort(404, "Usuário de origem não encontrado")
 
     if not destination_account:
-        abort(404, "Destination user not found")
+        abort(404, "Usuário de destino não encontrado")
 
     verify_transaction(json_data, origin_account, destination_account)
 
@@ -54,7 +54,7 @@ def make_transfer(json_data):
     finally:
         db.session.close()
 
-    return {"message": "transaction ended successfully"}
+    return {"message": "Transação realizada com sucesso"}
 
 
 @transaction_routes.post("/withdrawal")
@@ -84,7 +84,10 @@ def make_withdrawal(json_data):
 
     transfered_amount = db.session.execute(query).scalar_one() or 0
 
-    if transfered_amount < origin_account.account_type_relation.daily_limit:
+    if (
+        transfered_amount + json_data["value"]
+        < origin_account.account_type_relation.daily_limit
+    ):
         transaction = create_transaction(json_data)
         transaction.origin_account_id = origin_account_id
         origin_account.amount -= transaction.value
@@ -96,8 +99,8 @@ def make_withdrawal(json_data):
         finally:
             db.session.close()
 
-        return {"message": "withdrawal ended successfully"}
-    abort(400, "daily limit exceeded")
+        return {"message": "Saque realizado com sucesso"}
+    abort(400, "Limite diário excedido")
 
 
 @transaction_routes.post("/deposit")
@@ -124,7 +127,7 @@ def make_deposit(json_data):
     finally:
         db.session.close()
 
-    return {"message": "deposit ended successfully"}
+    return {"message": "Depósito realizado com sucesso"}
 
 
 @transaction_routes.get("/transactions")
@@ -195,6 +198,9 @@ def verify_transaction(json_data, origin_account, destination_account=None):
     transfered_amount = db.session.execute(query).scalar_one()
 
     json_data["value"] = Decimal(json_data["value"])
+
+    if json_data["value"] > origin_account.amount:
+        abort(401, "Saldo não pode ser negativo")
 
     if not transfered_amount:
         transfered_amount = 0
