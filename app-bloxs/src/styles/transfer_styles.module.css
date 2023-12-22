@@ -28,6 +28,7 @@
     width: 100%;
     margin-bottom: 12px;
     font-size: 14px;
+    font-family: 'Poppins', sans-serif;
     color: #5dade2;
 }
 
@@ -50,6 +51,7 @@
 
 .subtitle {
     font-size: 1.8rem;
+    font-family: 'Poppins', sans-serif;
     margin: 10px;
     text-align: center;
     text-transform: capitalize;
@@ -65,18 +67,21 @@
     margin: 0;
     margin-top: 14px;
     margin-bottom: 14px;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 200;
+    font-family: 'Poppins', sans-serif;
     float: left;
 }
 
 .warning {
     margin-top: 32px;
     font-size: 15px;
+    font-family: 'Poppins', sans-serif;
     color: #666666;
 }
 
 .alert {
+    font-family: 'Poppins', sans-serif;
     position: fixed;
     justify-content: center;
     top: 70px;
