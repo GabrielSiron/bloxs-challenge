@@ -1,11 +1,13 @@
 from models import Account
 from models import AccountType
 from models import Person
+from sqlalchemy import select
 from services import db
 
 
 def seed_database():
-    user = Account.query.all()
+    query = select(Account)
+    user = db.session.execute(query).first()
     if not user:
         gold_account_type = AccountType()
         gold_limit = 500.00
@@ -30,7 +32,7 @@ def seed_database():
         first_person.document_number = "99999999999"
 
         first_account = Account()
-        first_account.email = "gabriel@bloxs.com"
+        first_account.email = "gabriel@bloxs.com.br"
         first_account.password = "password"
         first_account.amount = 10000.00
         first_account.person_relation = first_person
@@ -43,7 +45,7 @@ def seed_database():
         second_person.document_number = "88888888888"
 
         second_account = Account()
-        second_account.email = "lucas@bloxs.com"
+        second_account.email = "lucas@bloxs.com.br"
         second_account.password = "password"
         second_account.amount = 10000.00
         second_account.person_relation = second_person
