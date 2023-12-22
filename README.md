@@ -16,6 +16,8 @@ $ docker-compose build
 $ docker-compose up
 ```
 
+ Uma vez no ar, acesse o link `http://localhost:3000` para acessar a aplicação.
+
 ## Como Usar
 
 Desenvolvi um seed para a aplicação que alimenta o banco de dados com dois usuários:
