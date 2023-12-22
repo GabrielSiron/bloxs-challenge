@@ -12,7 +12,6 @@ class CreateAccountValidator(Schema):
 
 
 class ChangePasswordValidator(Schema):
-    email = String(required=True, validate=Length(0, 50))
     current_password = String(required=True, validate=Length(8, 50))
     new_password = String(required=True, validate=Length(8, 50))
 
