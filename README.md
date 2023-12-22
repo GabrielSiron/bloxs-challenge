@@ -56,6 +56,10 @@ Por conta da implementação interna da imagem usada para rodar o MySQL, o termi
 
 Nenhum endpoint precisa do account_id porque essa informação é retirada do token de autenticação
 
+## Collection | Insomnia
+
+Para testar corretamente os endpoints, o primeiro ato deve ser o login. Uma vez feito o login, a API retornará um token de autenticação, que deve ser inserido no header de todos os requests dali em diante. A chave do token é "Authorization".
+
 ## Processo de Desenvolvimento
 
 Antes de por a mão na massa com código, tirei um momento para efetuar o planejamento do projeto. Lendo o documento do desafio, extraí as demandas e as organizei por área da aplicação.
