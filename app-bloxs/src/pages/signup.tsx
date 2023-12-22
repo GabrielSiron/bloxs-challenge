@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image"
 import CallToAction from '../assets/img/signup-image.jpg'
 
-export default function SignUp() {
+export default function SignUpPage() {
   const [signupForm, setSignupForm] = useState({
     name: '',
     email: '',
@@ -21,7 +21,7 @@ export default function SignUp() {
       setSignupForm({...signupForm, birth_date: signupForm.birth_date + "T00:00:00"})
     }
   }, [signupForm])
-  
+
   const router = useRouter()
 
   const SignUp = () => {

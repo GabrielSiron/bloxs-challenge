@@ -1,5 +1,5 @@
 import styles from '../styles/transactions.module.css'
-import Header from '../components/header/sidemenu';
+import Header from '../components/sidemenu/sidemenu';
 
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -109,10 +109,10 @@ export default function Transactions() {
               }
             </List>
             <div className={styles.btnContainer}>
-              <IconButton disabled={!hasPrev} onClick={() => setPage(prevPage)} className={styles.leftButton} aria-label="fingerprint" sx={{ color: blue[200] }} size="large">
+              <IconButton disabled={!hasPrev} onClick={() => setPage(prevPage)} className={styles.leftButton} aria-label="fingerprint" sx={{ color: 'black' }} size="large">
                 <ChevronLeftIcon />
               </IconButton>
-              <IconButton disabled={!hasNext} onClick={() => setPage(nextPage)} className={styles.rightButton} aria-label="fingerprint" sx={{ color: blue[200] }} size="large">
+              <IconButton disabled={!hasNext} onClick={() => setPage(nextPage)} className={styles.rightButton} aria-label="fingerprint" sx={{ color: 'black' }} size="large">
                 <ChevronRightIcon />
               </IconButton>
             </div>

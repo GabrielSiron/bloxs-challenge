@@ -1,5 +1,5 @@
 import styles from '../styles/account.module.css';
-import Header from '../components/header/sidemenu';
+import Header from '../components/sidemenu/sidemenu';
 
 import { useState, useEffect } from 'react';
 

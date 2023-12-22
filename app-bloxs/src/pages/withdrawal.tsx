@@ -10,7 +10,7 @@ import Collapse from '@mui/material/Collapse';
 import InputAdornment from "@mui/material/InputAdornment"
 
 import { makeWithdrawal } from "../api/transaction"
-import Header from '../components/header/sidemenu'
+import Header from '../components/sidemenu/sidemenu'
 
 import { getAccountInfo } from '../api/account'
 
