@@ -20,7 +20,6 @@ def create_app():
 
     migrate = Migrate()
 
-    testing = "Testando o limite de caracteres por linha definido no BLACK e testando se o pre-commit ira funcioncar corretamente."
     driver = os.environ["DB_DRIVER"]
     user = os.environ["DB_USER"]
     password = os.environ["DB_PASSWORD"]
@@ -31,6 +30,10 @@ def create_app():
     app.config[
         "SQLALCHEMY_DATABASE_URI"
     ] = f"{driver}://{user}:{password}@{host}:{port}/{db_name}"
+
+    # app.config[
+    #     "SQLALCHEMY_DATABASE_URI"
+    # ] = "sqlite:///database.db"
 
     cors = CORS(app, resources={r"/*": {"origins": "*"}})
 

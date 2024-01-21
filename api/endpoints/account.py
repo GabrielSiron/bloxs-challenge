@@ -1,17 +1,14 @@
 from apiflask import APIBlueprint, abort
-from flask import request
+from flask import request, jsonify, make_response
 from sqlalchemy import select
-from sqlalchemy.exc import NoResultFound
+from sqlalchemy.orm import joinedload
+from sqlalchemy.exc import NoResultFound, IntegrityError
+
 from services import db
-from models import Account
+from models import Account, AccountType
 from models import Person
-
 from validators import CreateAccountValidator, ChangePasswordValidator, LoginValidator
-
 from utils import encode_auth_token
-
-import os
-import jwt
 
 account_routes = APIBlueprint("account", __name__)
 
@@ -19,34 +16,31 @@ account_routes = APIBlueprint("account", __name__)
 @account_routes.post("/signup")
 @account_routes.input(CreateAccountValidator)
 def create_account(json_data):
-    person = Person()
-    account = Account()
+    person = Person(
+        name=json_data["name"],
+        document_number=json_data["document_number"],
+        birth_date=json_data["birth_date"],
+    )
 
-    person.name = json_data["name"]
-    person.document_number = clean_document_number(json_data["document_number"])
-    person.birth_date = json_data["birth_date"]
-
-    account.email = json_data["email"]
-    account.password = json_data["password"]
-
-    account.person_relation = person
+    account = Account(
+        email=json_data["email"], password=json_data["password"], person_relation=person
+    )
 
     try:
         db.session.add(account)
         db.session.commit()
-    except Exception as e:
+
+    except IntegrityError as e:
         db.session.rollback()
-        abort(401, str(e))
+        return make_response(jsonify(message="cpf ou email já cadastrados"), 401)
+    except Exception as e:
+        return make_response(
+            jsonify(message="Ops! Ocorreu um erro. Tente novamente.", error=str(e)), 401
+        )
     finally:
         db.session.close()
 
-    query = select(Account.id).filter_by(email=json_data["email"])
-
-    id = db.session.execute(query).scalar_one()
-
-    token = encode_auth_token(id)
-
-    return {"message": "Login realizado com sucesso", "token": token}
+    return login()
 
 
 @account_routes.put("/change_password")
@@ -73,14 +67,14 @@ def change_password(json_data):
 @account_routes.input(LoginValidator)
 def login(json_data):
     query = (
-        select(Account)
+        select(Account.id)
         .filter_by(email=json_data["email"])
         .filter_by(password=json_data["password"])
     )
 
     try:
-        account = db.session.execute(query).scalar_one()
-        token = encode_auth_token(account.id)
+        id = db.session.execute(query).scalar_one()
+        token = encode_auth_token(id)
         return {"message": "Logged in", "token": token}
     except NoResultFound:
         abort(400, "Email ou senha invalidos")
@@ -88,9 +82,12 @@ def login(json_data):
 
 @account_routes.get("/account")
 def get_account_info():
-    id = request.args["account_id"]
-
-    query = select(Account).filter_by(id=id)
+    query = (
+        select(Account)
+        .outerjoin(Person)
+        .outerjoin(AccountType)
+        .filter(Account.id == request.args["account_id"])
+    )
 
     account = db.session.execute(query).scalar_one()
 
@@ -107,7 +104,7 @@ def get_account_info():
             "account_daily_limit": account.account_type_relation.daily_limit,
         }
 
-    abort(404, "Usuário não foi encontrado")
+    return jsonify(404, message="Usuário não foi encontrado")
 
 
 @account_routes.put("/unblock")
@@ -141,7 +138,7 @@ def block_account():
 
 
 def find_user_by_pix_key():
-    document_number = clean_document_number(request.json["pix_key"])
+    document_number = Person.clean_document_number(request.json["pix_key"])
 
     query = (
         select(Account)
@@ -157,9 +154,3 @@ def find_user_by_pix_key():
             401,
             "Chave pix não encontrada. Tente novamente, prestando atenção nos dígitos inseridos.",
         )
-
-
-def clean_document_number(document_number):
-    document_number = document_number.replace("-", "")
-    document_number = document_number.replace(".", "")
-    return document_number

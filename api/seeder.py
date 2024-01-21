@@ -55,7 +55,7 @@ def seed_database():
             db.session.add(diamond_account_type)
             db.session.add_all([first_account, second_account])
             db.session.commit()
-        except:
+        except Exception as e:
             db.session.rollback()
         finally:
             db.session.close()
